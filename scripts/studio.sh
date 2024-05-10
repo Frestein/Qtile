@@ -1,0 +1,1 @@
+/home/frestein/.local/share/JetBrains/Toolbox/apps/android-studio-3/bin/studio.sh

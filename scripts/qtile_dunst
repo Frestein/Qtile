@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+# qtile directory
+DIR="$HOME/.config/qtile"
+
+# Launch dunst daemon
+if [[ $(pidof dunst) ]]; then
+	pkill dunst
+fi
+
+dunst -config "$DIR"/dunstrc &

@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+# qtile directory
+DIR="$HOME/.config/qtile"
+
+# launch polybar
+bash "$DIR"/theme/polybar.sh
