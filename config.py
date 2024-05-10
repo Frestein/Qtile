@@ -3,7 +3,7 @@ from libqtile.config import EzKey as Key, EzKeyChord as KeyChord
 from libqtile.lazy import lazy
 
 # Mouse
-from libqtile.config import Click, Drag
+from libqtile.config import EzClick as Click, EzDrag as Drag
 
 # Groups
 from libqtile.config import Group, Match
@@ -173,16 +173,9 @@ keys = [
 
 # Drag floating layouts.
 mouse = [
-    Drag(
-        [mod],
-        "Button1",
-        lazy.window.set_position_floating(),
-        start=lazy.window.get_position(),
-    ),
-    Drag(
-        [mod], "Button3", lazy.window.set_size_floating(), start=lazy.window.get_size()
-    ),
-    Click([mod], "Button2", lazy.window.bring_to_front()),
+    Drag("M-1", lazy.window.set_position_floating(), start=lazy.window.get_position()),
+    Drag("M-3", lazy.window.set_size_floating(), start=lazy.window.get_size()),
+    Click("M-2", lazy.window.bring_to_front()),
 ]
 
 # Groups ------------------------------
