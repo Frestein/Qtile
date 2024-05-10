@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+# qtile directory
+DIR="$HOME/.config/qtile"
+
+CONFIG="$DIR/alacritty/alacritty.toml"
+
+alacritty --class 'Музыка,Музыка' --config-file "$CONFIG" \
+	-o window.dimensions.columns=105 window.dimensions.lines=22 \
+	-e ~/.ncmpcpp/scripts/ncmpcpp-art
