@@ -1,0 +1,3 @@
+# Qtile
+
+Configuration for Qtile.
