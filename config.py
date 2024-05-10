@@ -1,5 +1,5 @@
 # Keys
-from libqtile.config import Key, KeyChord
+from libqtile.config import EzKey as Key, EzKeyChord as KeyChord
 from libqtile.lazy import lazy
 
 # Mouse
@@ -58,274 +58,112 @@ def autostart():
 
 # Key Bindings ------------------------------
 
+modifier_keys = {
+   'M': 'mod4',
+   'A': 'mod1',
+   'S': 'shift',
+   'C': 'control',
+}
+
 keys = [
     # A list of available commands that can be bound to keys can be found
     # at https://docs.qtile.org/en/latest/manual/config/lazy.html
     # Terminal --
-    Key(
-        [mod], "Return", lazy.spawn(terminal), desc="Launch terminal with qtile configs"
-    ),
+    Key("M-<Return>", lazy.spawn(terminal), desc="Launch terminal"),
     # GUI Apps --
-    Key([mod], "w", lazy.spawn(web_browser), desc="Launch web browser"),
-    Key(
-        [mod],
-        "m",
-        lazy.spawn(music_player),
-        desc="Launch music player",
-    ),
-    Key(
-        [mod],
-        "k",
-        lazy.spawn(password_manager),
-        desc="Launch password manager",
-    ),
-    Key(
-        [mod],
-        "d",
-        lazy.spawn(discord),
-        desc="Launch discord",
-    ),
-    Key(
-        [mod],
-        "t",
-        lazy.spawn(telegram),
-        desc="Launch telegram",
-    ),
-    Key([mod, "shift"], "f", lazy.spawn(file_manager), desc="Launch file manager"),
+    Key("M-w", lazy.spawn(web_browser), desc="Launch web browser"),
+    Key("M-m", lazy.spawn(music_player), desc="Launch music player"),
+    Key("M-k", lazy.spawn(password_manager), desc="Launch password manager"),
+    Key("M-t", lazy.spawn(telegram), desc="Launch telegram"),
+    Key("M-d", lazy.spawn(discord), desc="Launch discord"),
+    Key("M-S-f", lazy.spawn(file_manager), desc="Launch file manager"),
     # Rofi Applets --
-    Key(
-        ["mod1"],
-        "F1",
-        lazy.spawn(rofi_applets + "rofi_launcher"),
-        desc="Run application launcher",
-    ),
-    Key(
-        ["mod1"],
-        "F2",
-        lazy.spawn(rofi_applets + "rofi_runner"),
-        desc="Run command runner",
-    ),
-    Key(
-        [mod],
-        "n",
-        lazy.spawn(rofi_applets + "network_menu"),
-        desc="Run network manager applet",
-    ),
-    Key(
-        [mod],
-        "x",
-        lazy.spawn(rofi_applets + "rofi_powermenu"),
-        desc="Run powermenu applet",
-    ),
-    Key([mod], "r", lazy.spawn(rofi_applets + "rofi_asroot"), desc="Run asroot applet"),
-    Key(
-        [mod],
-        "s",
-        lazy.spawn(rofi_applets + "rofi_screenshot"),
-        desc="Run screenshot applet",
-    ),
+    Key("A-<F1>", lazy.spawn(rofi_applets + "rofi_launcher"), desc="Run application launcher"),
+    Key("A-<F2>", lazy.spawn(rofi_applets + "rofi_runner"), desc="Run command runner"),
+    Key("M-n", lazy.spawn(rofi_applets + "network_menu"), desc="Run network manager applet"),
+    Key("M-x", lazy.spawn(rofi_applets + "rofi_powermenu"), desc="Run powermenu applet"),
+    Key("M-r", lazy.spawn(rofi_applets + "rofi_asroot"), desc="Run asroot applet"),
+    Key("M-s", lazy.spawn(rofi_applets + "rofi_screenshot"), desc="Run screenshot applet"),
     # Function keys : Volume --
-    Key(
-        [],
-        "XF86AudioRaiseVolume",
-        lazy.spawn(volume + " --inc"),
-        desc="Raise speaker volume",
-    ),
-    Key(
-        [],
-        "XF86AudioLowerVolume",
-        lazy.spawn(volume + " --dec"),
-        desc="Lower speaker volume",
-    ),
-    Key([], "XF86AudioMute", lazy.spawn(volume + " --toggle"), desc="Toggle mute"),
-    Key(
-        [],
-        "XF86AudioMicMute",
-        lazy.spawn(volume + " --toggle-mic"),
-        desc="Toggle mute for mic",
-    ),
+    Key("<XF86AudioRaiseVolume>", lazy.spawn(volume + " --inc"), desc="Raise speaker volume"),
+    Key("<XF86AudioLowerVolume>", lazy.spawn(volume + " --dec"), desc="Lower speaker volume"),
+    Key("<XF86AudioMute>", lazy.spawn(volume + " --toggle"), desc="Toggle mute"),
+    Key("<XF86AudioMicMute>", lazy.spawn(volume + " --toggle-mic"), desc="Toggle mute for mic"),
     # Function keys : Media --
-    Key([], "XF86AudioNext", lazy.spawn("playerctl next"), desc="Next track"),
-    Key([], "XF86AudioPrev", lazy.spawn("playerctl previous"), desc="Previous track"),
-    Key(
-        [],
-        "XF86AudioPlay",
-        lazy.spawn("playerctl play-pause"),
-        desc="Toggle play/pause",
-    ),
-    Key([], "XF86AudioStop", lazy.spawn("playerctl stop"), desc="Stop playing"),
+    Key("<XF86AudioNext>", lazy.spawn("playerctl next"), desc="Next track"),
+    Key("<XF86AudioPrev>", lazy.spawn("playerctl previous"), desc="Previous track"),
+    Key("<XF86AudioPlay>", lazy.spawn("playerctl play-pause"), desc="Toggle play/pause"),
+    Key("<XF86AudioStop>", lazy.spawn("playerctl stop"), desc="Stop playing"),
     # Screenshots --
-    Key([], "Print", lazy.spawn(screenshot + " --now"), desc="Take Screenshot"),
-    Key(
-        ["control"],
-        "Print",
-        lazy.spawn(screenshot + " --in5"),
-        desc="Take Screenshot in 5 seconds",
-    ),
-    Key(
-        ["shift"],
-        "Print",
-        lazy.spawn(screenshot + " --in10"),
-        desc="Take Screenshot in 10 seconds",
-    ),
-    Key(
-        ["control", "shift"],
-        "Print",
-        lazy.spawn(screenshot + " --win"),
-        desc="Take Screenshot of active window",
-    ),
-    Key(
-        [mod],
-        "Print",
-        lazy.spawn(screenshot + " --area"),
-        desc="Take Screenshot of selected area",
-    ),
+    Key("<Print>", lazy.spawn(screenshot + " --now"), desc="Take Screenshot"),
+    Key("C-<Print>", lazy.spawn(screenshot + " --in5"), desc="Take Screenshot in 5 seconds"),
+    Key("S-<Print>", lazy.spawn(screenshot + " --in10"), desc="Take Screenshot in 10 seconds"),
+    Key("C-S-<Print>", lazy.spawn(screenshot + " --win"), desc="Take Screenshot of active window"),
+    Key("M-<Print>", lazy.spawn(screenshot + " --area"), desc="Take Screenshot of selected area"),
     # Misc --
-    Key([mod], "p", lazy.spawn(color_picker), desc="Run colorpicker"),
-    Key(
-        ["mod1", "control"],
-        "l",
-        lazy.spawn("betterlockscreen --lock --time-format %H:%M"),
-        desc="Run lockscreen",
-    ),
+    Key("M-p", lazy.spawn(color_picker), desc="Run colorpicker"),
+    Key("A-C-l", lazy.spawn("betterlockscreen --lock --time-format %H:%M"), desc="Run lockscreen"),
     # WM Specific --
-    Key([mod], "c", lazy.window.kill(), desc="Kill focused window"),
+    Key("M-c", lazy.window.kill(), desc="Kill focused window"),
     # Control Qtile
-    Key(
-        [mod, "control"],
-        "r",
-        lazy.reload_config(),
-        lazy.spawn(notify_cmd + ' "Configuration Reloaded!"'),
-        desc="Reload the config",
-    ),
-    Key(
-        [mod, "control"],
-        "s",
-        lazy.restart(),
-        lazy.spawn(notify_cmd + ' "Restarting Qtile..."'),
-        desc="Restart Qtile",
-    ),
-    Key(
-        [mod, "control"],
-        "q",
-        lazy.shutdown(),
-        lazy.spawn(notify_cmd + ' "Exiting Qtile..."'),
-        desc="Shutdown Qtile",
-    ),
+    Key("M-C-r", lazy.reload_config(), lazy.spawn(notify_cmd + ' "Configuration Reloaded!"'), desc="Reload the config"),
+    Key("M-C-s", lazy.restart(), lazy.spawn(notify_cmd + ' "Restarting Qtile..."'), desc="Restart Qtile"),
+    Key("M-C-q", lazy.shutdown(), lazy.spawn(notify_cmd + ' "Exiting Qtile..."'), desc="Shutdown Qtile"),
     # Switch between windows
-    Key([mod], "Left", lazy.layout.left(), desc="Move focus to left"),
-    Key([mod], "Right", lazy.layout.right(), desc="Move focus to right"),
-    Key([mod], "Down", lazy.layout.down(), desc="Move focus down"),
-    Key([mod], "Up", lazy.layout.up(), desc="Move focus up"),
+    Key("M-<Left>", lazy.layout.left(), desc="Move focus to left"),
+    Key("M-<Right>", lazy.layout.right(), desc="Move focus to right"),
+    Key("M-<Down>", lazy.layout.down(), desc="Move focus down"),
+    Key("M-<Up>", lazy.layout.up(), desc="Move focus up"),
     # Move windows between left/right columns or move up/down in current stack.
     # Moving out of range in Columns layout will create new column.
-    Key(
-        [mod, "shift"],
-        "Left",
-        lazy.layout.shuffle_left(),
-        desc="Move window to the left",
-    ),
-    Key(
-        [mod, "shift"],
-        "Right",
-        lazy.layout.shuffle_right(),
-        desc="Move window to the right",
-    ),
-    Key([mod, "shift"], "Down", lazy.layout.shuffle_down(), desc="Move window down"),
-    Key([mod, "shift"], "Up", lazy.layout.shuffle_up(), desc="Move window up"),
+    Key("M-S-<Left>", lazy.layout.shuffle_left(), desc="Move window to the left"),
+    Key("M-S-<Right>", lazy.layout.shuffle_right(), desc="Move window to the right"),
+    Key("M-S-<Down>", lazy.layout.shuffle_down(), desc="Move window down"),
+    Key("M-S-<Up>", lazy.layout.shuffle_up(), desc="Move window up"),
     # Grow windows. If current window is on the edge of screen and direction
     # will be to screen edge - window would shrink.
-    Key(
-        [mod, "control"],
-        "Left",
-        lazy.layout.grow_left(),
-        desc="Grow window to the left",
-    ),
-    Key(
-        [mod, "control"],
-        "Right",
-        lazy.layout.grow_right(),
-        desc="Grow window to the right",
-    ),
-    Key([mod, "control"], "Down", lazy.layout.grow_down(), desc="Grow window down"),
-    Key([mod, "control"], "Up", lazy.layout.grow_up(), desc="Grow window up"),
-    Key(
-        [mod, "control"],
-        "Return",
-        lazy.layout.normalize(),
-        desc="Reset all window sizes",
-    ),
+    Key("M-C-<Left>", lazy.layout.grow_left(), desc="Grow window to the left"),
+    Key("M-C-<Right>", lazy.layout.grow_right(), desc="Grow window to the right"),
+    Key("M-C-<Down>", lazy.layout.grow_down(), desc="Grow window down"),
+    Key("M-C-<Up>", lazy.layout.grow_up(), desc="Grow window up"),
+    Key("M-C-<Return>", lazy.layout.normalize(), desc="Reset all window sizes"),
     # Toggle floating and fullscreen
-    Key(
-        [mod],
-        "z",
-        lazy.window.toggle_floating(),
-        desc="Put the focused window to/from floating mode",
-    ),
-    Key(
-        [mod],
-        "f",
-        lazy.window.toggle_fullscreen(),
-        desc="Put the focused window to/from fullscreen mode",
-    ),
+    Key("M-z", lazy.window.toggle_floating(), desc="Put the focused window to/from floating mode"),
+    Key("M-f", lazy.window.toggle_fullscreen(), desc="Put the focused window to/from fullscreen mode"),
     # Go to next/prev group
-    Key(
-        [mod, "mod1"],
-        "Right",
-        lazy.screen.next_group(),
-        desc="Move to the group on the right",
-    ),
-    Key(
-        [mod, "mod1"],
-        "Left",
-        lazy.screen.prev_group(),
-        desc="Move to the group on the left",
-    ),
+    Key("M-A-<Right>", lazy.screen.next_group(), desc="Move to the group on the right"),
+    Key("M-A-<Left>", lazy.screen.prev_group(), desc="Move to the group on the left"),
     # Back-n-forth groups
-    Key([mod], "b", lazy.screen.toggle_group(), desc="Move to the last visited group"),
+    Key("M-b", lazy.screen.toggle_group(), desc="Move to the last visited group"),
     # Change focus to other window
-    Key([mod], "Tab", lazy.layout.next(), desc="Move window focus to other window"),
+    Key("M-<Tab>", lazy.layout.next(), desc="Move window focus to other window"),
     # Toggle between different layouts as defined below
-    Key([mod, "shift"], "space", lazy.next_layout(), desc="Toggle between layouts"),
+    Key("M-S-<space>", lazy.next_layout(), desc="Toggle between layouts"),
     # Increase the space for master window at the expense of slave windows
-    Key(
-        [mod],
-        "equal",
-        lazy.layout.increase_ratio(),
-        desc="Increase the space for master window",
-    ),
+    Key("M-<equal>", lazy.layout.increase_ratio(), desc="Increase the space for master window"),
     # Decrease the space for master window in the advantage of slave windows
-    Key(
-        [mod],
-        "minus",
-        lazy.layout.decrease_ratio(),
-        desc="Decrease the space for master window",
-    ),
+    Key("M-<minus>", lazy.layout.decrease_ratio(), desc="Decrease the space for master window"),
     # Toggle between split and unsplit sides of stack.
-    Key(
-        [mod, "shift"],
-        "s",
-        lazy.layout.toggle_split(),
-        desc="Toggle between split and unsplit sides of stack",
-    ),
+    Key("M-S-s", lazy.layout.toggle_split(), desc="Toggle between split and unsplit sides of stack"),
     # Modes: Reize
     KeyChord(
-        [mod, "shift"],
-        "r",
+        "M-S-r",
         [
-            Key([], "Left", lazy.layout.grow_left()),
-            Key([], "Right", lazy.layout.grow_right()),
-            Key([], "Down", lazy.layout.grow_down()),
-            Key([], "Up", lazy.layout.grow_up()),
+            Key("<Left>", lazy.layout.grow_left()),
+            Key("<Right>", lazy.layout.grow_right()),
+            Key("<Down>", lazy.layout.grow_down()),
+            Key("<Up>", lazy.layout.grow_up()),
         ],
         mode=True,
         name="Resize",
     ),
     # Modes: Layouts
     KeyChord(
-        [mod, "shift"],
-        "l",
-        [Key([], "Left", lazy.prev_layout()), Key([], "Right", lazy.next_layout())],
+        "M-S-l",
+        [
+            Key("<Left>", lazy.prev_layout()),
+            Key("<Right>", lazy.next_layout())
+        ],
         mode=True,
         name="Layouts",
     ),
@@ -354,19 +192,9 @@ for i in groups:
     keys.extend(
         [
             # mod + number of group = switch to group
-            Key(
-                [mod],
-                i.name,
-                lazy.group[i.name].toscreen(),
-                desc="Switch to group {}".format(i.name),
-            ),
+            Key( "M-" + i.name, lazy.group[i.name].toscreen(), desc="Switch to group {}".format(i.name)),
             # mod + shift + number of group = switch to & move focused window to group
-            Key(
-                [mod, "shift"],
-                i.name,
-                lazy.window.togroup(i.name, switch_group=True),
-                desc="Switch to & move focused window to group {}".format(i.name),
-            ),
+            Key( "M-S-" + i.name, lazy.window.togroup(i.name, switch_group=True), desc="Switch to & move focused window to group {}".format(i.name)),
         ]
     )
 
