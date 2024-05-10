@@ -25,10 +25,6 @@ from libqtile import hook
 
 # Environments ------------------------------
 
-# The mod key for the default config is 'mod4', which is typically bound to the "Super" keys,
-# which are things like the windows key and the mac command key.
-mod = "mod4"
-
 # Scripts/Apps variables
 home = path.expanduser("~")
 autostart_sh = home + "/.config/qtile/scripts/qtile_autostart"
@@ -46,11 +42,11 @@ password_manager = "keepassxc"
 rofi_applets = home + "/.config/qtile/scripts/"
 notify_cmd = "dunstify -u low -h string:x-dunst-stack-tag:qtileconfig"
 
-# System environments
+# System environments -----------------------
 environ["KITTY_CONFIG_DIRECTORY"] = home + "/.config/qtile/kitty"
 
 
-# Startup ------------------------------
+# Startup ----------------------------------
 @hook.subscribe.startup_once
 def autostart():
     Popen([autostart_sh])
@@ -178,7 +174,7 @@ mouse = [
     Click("M-2", lazy.window.bring_to_front()),
 ]
 
-# Groups ------------------------------
+# Groups -------------------------------------
 groups = [Group(i) for i in "12345678"]
 
 for i in groups:
@@ -191,7 +187,7 @@ for i in groups:
         ]
     )
 
-# Layouts ------------------------------
+# Layouts -----------------------------------
 var_bg_color = "#2e3440"
 var_active_bg_color = "#81A1C1"
 var_active_fg_color = "#2e3440"
@@ -419,7 +415,7 @@ layouts = [
     ),
 ]
 
-# Screens ------------------------------
+# Screens ----------------------------------
 
 # Default Qtile Bar (commented)
 """
