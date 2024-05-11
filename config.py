@@ -35,6 +35,7 @@ screenshot = home + "/.config/qtile/scripts/qtile_screenshot"
 file_manager = "nemo"
 web_browser = "firefox"
 terminal = "kitty --session=session.conf"
+android_studio = home + "/.config/qtile/scripts/studio.sh"
 discord = "vesktop"
 telegram = "telegram-desktop"
 music_player = "muffon"
@@ -67,6 +68,7 @@ keys = [
     # Terminal --
     Key("M-<Return>", lazy.spawn(terminal), desc="Launch terminal"),
     # GUI Apps --
+    Key("M-a", lazy.spawn(android_studio), desc="Launch Android Studio"),
     Key("M-w", lazy.spawn(web_browser), desc="Launch web browser"),
     Key("M-m", lazy.spawn(music_player), desc="Launch music player"),
     Key("M-k", lazy.spawn(password_manager), desc="Launch password manager"),
@@ -225,6 +227,7 @@ groups = [
         "7",
         matches=[
             Match(wm_class="steam"),
+            Match(wm_class="yad_v13_0"),
             Match(wm_class="muffon"),
         ],
     ),
