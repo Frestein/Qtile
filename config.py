@@ -77,10 +77,10 @@ keys = [
     Key("M-S-f", lazy.spawn(file_manager), desc="Launch file manager"),
     # Rofi Applets --
     Key("A-<F1>", lazy.spawn(rofi_applets + "rofi_launcher"), desc="Run application launcher"),
-    Key("A-<F2>", lazy.spawn(rofi_applets + "rofi_runner"), desc="Run command runner"),
+    Key("M-r", lazy.spawn(rofi_applets + "rofi_runner"), desc="Run command runner"),
     Key("M-n", lazy.spawn(rofi_applets + "network_menu"), desc="Run network manager applet"),
     Key("M-x", lazy.spawn(rofi_applets + "rofi_powermenu"), desc="Run powermenu applet"),
-    Key("M-r", lazy.spawn(rofi_applets + "rofi_asroot"), desc="Run asroot applet"),
+    Key("A-r", lazy.spawn(rofi_applets + "rofi_asroot"), desc="Run asroot applet"),
     Key("M-s", lazy.spawn(rofi_applets + "rofi_screenshot"), desc="Run screenshot applet"),
     # Function keys : Volume --
     Key("<XF86AudioRaiseVolume>", lazy.spawn(volume + " --inc"), desc="Raise speaker volume"),
@@ -220,7 +220,7 @@ groups = [
         "6",
         matches=[
             Match(wm_class="TelegramDesktop"),
-            Match(wm_class="vesktop"),
+            Match(wm_class="webcord"),
         ],
     ),
     Group(
