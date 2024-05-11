@@ -20,7 +20,7 @@ from libqtile import bar, widget
 
 from os import path, environ
 from subprocess import Popen
-from libqtile import hook
+from libqtile import hook, qtile
 
 
 # Environments ------------------------------
@@ -55,10 +55,10 @@ def autostart():
 # Key Bindings ------------------------------
 
 modifier_keys = {
-   'M': 'mod4',
-   'A': 'mod1',
-   'S': 'shift',
-   'C': 'control',
+    "M": "mod4",
+    "A": "mod1",
+    "S": "shift",
+    "C": "control",
 }
 
 keys = [
@@ -175,15 +175,83 @@ mouse = [
 ]
 
 # Groups -------------------------------------
-groups = [Group(i) for i in "12345678"]
+
+
+# Auto-switching group when a new window is launched
+@hook.subscribe.client_managed
+def auto_switch(window):
+    if window.group.name != qtile.current_group.name:
+        window.group.cmd_toscreen()
+
+
+groups = [
+    Group("1", matches=[Match(wm_class="kitty")]),
+    Group(
+        "2",
+        matches=[
+            Match(wm_class="jetbrains-studio"),
+            Match(wm_class="jetbrains-pycharm"),
+            Match(wm_class="jetbrains-toolbox"),
+        ],
+    ),
+    Group(
+        "3",
+        matches=[
+            Match(wm_class="firefox"),
+        ],
+    ),
+    Group(
+        "4",
+        matches=[
+            Match(wm_class="Nemo"),
+            Match(wm_class="thunderbird"),
+        ],
+    ),
+    Group(
+        "5",
+        matches=[
+            Match(wm_class="obsidian"),
+            Match(wm_class="Zathura"),
+        ],
+    ),
+    Group(
+        "6",
+        matches=[
+            Match(wm_class="TelegramDesktop"),
+            Match(wm_class="vesktop"),
+        ],
+    ),
+    Group(
+        "7",
+        matches=[
+            Match(wm_class="steam"),
+            Match(wm_class="muffon"),
+        ],
+    ),
+    Group(
+        "8",
+        matches=[
+            Match(wm_class="jamesdsp"),
+            Match(wm_class="KeePassXC"),
+        ],
+    ),
+]
 
 for i in groups:
     keys.extend(
         [
             # mod + number of group = switch to group
-            Key( "M-" + i.name, lazy.group[i.name].toscreen(), desc="Switch to group {}".format(i.name)),
+            Key(
+                "M-" + i.name,
+                lazy.group[i.name].toscreen(),
+                desc="Switch to group {}".format(i.name),
+            ),
             # mod + shift + number of group = switch to & move focused window to group
-            Key( "M-S-" + i.name, lazy.window.togroup(i.name, switch_group=True), desc="Switch to & move focused window to group {}".format(i.name)),
+            Key(
+                "M-S-" + i.name,
+                lazy.window.togroup(i.name, switch_group=True),
+                desc="Switch to & move focused window to group {}".format(i.name),
+            ),
         ]
     )
 
