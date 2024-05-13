@@ -547,14 +547,11 @@ current_layout_icon = widget.CurrentLayoutIcon(
 )
 group_box = widget.GroupBox(
     fontsize=20,
-    margin_y=3,
-    margin_x=3,
     borderwidth=0,
     disable_drag=True,
     active=colors[7],
     inactive=colors[7],
     hide_unused=True,
-    rounded=True,
     highlight_method="block",
     highlight_color=colors[1],
     this_current_screen_border=colors[4],
@@ -623,15 +620,6 @@ cpu = widget.CPU(
     update_interval=3,
     foreground=colors[4],
 )
-clock_icon = widget.TextBox(
-    text="",
-    fontsize=20,
-    background=colors[1],
-    foreground=colors[20],
-)
-clock = CustomClock(
-    foreground=colors[1],
-)
 tray_icon = widget.TextBox(
     text="",
     fontsize=20,
@@ -641,6 +629,15 @@ tray_icon = widget.TextBox(
 tray = widget.Systray(
     padding=5,
     icon_size=18,
+)
+clock_icon = widget.TextBox(
+    text="",
+    fontsize=20,
+    background=colors[1],
+    foreground=colors[20],
+)
+clock = CustomClock(
+    foreground=colors[1],
 )
 
 # }}}
