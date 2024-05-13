@@ -1,28 +1,11 @@
 # vim:fileencoding=utf-8:foldmethod=marker
-# Keys
 from libqtile.config import EzKey as Key, EzKeyChord as KeyChord
-from libqtile.lazy import lazy
-
-# Mouse
 from libqtile.config import EzClick as Click, EzDrag as Drag
-
-# Groups
-from libqtile.config import Group, Match
-
-# Layouts
-from libqtile import layout
-
-# Screens
-from libqtile.config import Screen
-from libqtile import bar, widget
-
-# ScratchPad and DropDown
-# from libqtile.config import ScratchPad, DropDown
-
+from libqtile.config import Group, Match, Screen
+from libqtile.lazy import lazy
+from libqtile import qtile, bar, widget, layout, hook
 from os import path, environ
 from subprocess import Popen
-from libqtile import hook, qtile
-
 
 # Apps/Scripts Variables {{{
 
@@ -559,12 +542,13 @@ volume_icon = widget.TextBox(
     background=colors[3],
 )
 volume = widget.Volume(
+    mouse_callbacks={
+        'Button1': lazy.spawn(volume + " --inc"),
+        'Button3': lazy.spawn(volume + " --dec"),
+    },
+    get_volume_command="pactl get-sink-volume alsa_output.pci-0000_00_1f.3.analog-stereo ",
     foreground=colors[3],
     background=colors[20],
-    mouse_callbacks={
-        'Button1': lambda qtile=qtile: qtile.cmd_spawn('pactl set-sink-volume @DEFAULT_SINK@ +5%'),
-        'Button3': lambda qtile=qtile: qtile.cmd_spawn('pactl set-sink-volume @DEFAULT_SINK@ -5%'),
-    },
 )
 memory_icon = widget.TextBox(
     text="",
@@ -707,4 +691,5 @@ wmname = "Qtile"
 
 # When using the Wayland backend, this can be used to configure input devices.
 wl_input_rules = None
+
 # }}}
