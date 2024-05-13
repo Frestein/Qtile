@@ -496,11 +496,27 @@ layouts = [
 # }}}
 # Widgets {{{
 
+
+class CustomClock(widget.Clock):
+    def __init__(self, **config):
+        widget.Clock.__init__(self, **config)
+        self.add_callbacks({"Button1": self.toggle_format})
+        self.format_options = ["%I:%M", "%Y/%m/%d"]
+        self.current_format_index = 0
+        self.update_interval = 0.1
+
+    def toggle_format(self):
+        self.current_format_index = (self.current_format_index + 1) % len(
+            self.format_options
+        )
+        self.format = self.format_options[self.current_format_index]
+
 # Default settings for bar widgets.
 widget_defaults = dict(
     font=var_font_name,
     fontsize=14,
     padding=10,
+    background=colors[20],
 )
 
 # Same as `widget_defaults`, Default settings for extensions.
@@ -514,8 +530,6 @@ group_box = widget.GroupBox(
     fontsize=18,
     margin_y=3,
     margin_x=3,
-    padding_y=10,
-    padding_x=10,
     borderwidth=0,
     disable_drag=True,
     active=colors[7],
@@ -532,23 +546,30 @@ group_box = widget.GroupBox(
     urgent_border=colors[6],
     urgent_text=colors[1],
     foreground=colors[0],
-    background=colors[20],
     use_mouse_wheel=True,
+)
+windowname_icon = widget.TextBox(
+    text="",
+    fontsize=20,
+    background=colors[4],
+    foreground=colors[20],
+)
+windowname = widget.WindowName(
+    foreground=colors[4],
 )
 volume_icon = widget.TextBox(
     text="󰕾",
     fontsize=20,
-    foreground=colors[20],
     background=colors[3],
+    foreground=colors[20],
 )
 volume = widget.Volume(
     mouse_callbacks={
-        'Button1': lazy.spawn(volume + " --inc"),
-        'Button3': lazy.spawn(volume + " --dec"),
+        "Button1": lazy.spawn(volume + " --inc"),
+        "Button3": lazy.spawn(volume + " --dec"),
     },
     get_volume_command="pactl get-sink-volume alsa_output.pci-0000_00_1f.3.analog-stereo ",
     foreground=colors[3],
-    background=colors[20],
 )
 memory_icon = widget.TextBox(
     text="",
@@ -557,10 +578,22 @@ memory_icon = widget.TextBox(
     foreground=colors[20],
 )
 memory = widget.Memory(
-    format="{MemUsed: .0f}{mm} /{MemTotal: .0f}{mm} ",
+    format="{MemUsed:.0f}{mm}/{MemTotal:.0f}{mm}",
     measure_mem="G",
-    background=colors[20],
     foreground=colors[2],
+)
+net_icon = widget.TextBox(
+    text="󰑩",
+    fontsize=20,
+    background=colors[6],
+    foreground=colors[20],
+)
+net = widget.Net(
+    interface="enp0s31f6",
+    format="{down:.0f} {down_suffix:<0}/{up:.0f} {up_suffix:<0}",
+    update_interval=3,
+    use_bits=True,
+    foreground=colors[6],
 )
 cpu_icon = widget.TextBox(
     text="󰍛",
@@ -570,23 +603,25 @@ cpu_icon = widget.TextBox(
 )
 cpu = widget.CPU(
     format="{load_percent}%",
-    update_interval=1.0,
-    background=colors[20],
+    update_interval=3,
     foreground=colors[4],
 )
 clock_icon = widget.TextBox(
     text="",
     fontsize=20,
+    background=colors[1],
+    foreground=colors[20],
+)
+clock = CustomClock(
+    foreground=colors[1],
+)
+tray_icon = widget.TextBox(
+    text="",
+    fontsize=20,
     background=colors[5],
     foreground=colors[20],
 )
-clock = widget.Clock(
-    format="%I:%M",
-    background=colors[20],
-    foreground=colors[5],
-)
 tray = widget.Systray(
-    background=colors[20],
     padding=5,
     icon_size=18,
 )
@@ -598,18 +633,23 @@ screens = [
     Screen(
         top=bar.Bar(
             [
-                current_layout_icon,
-                group_box,
-                tray,
-                widget.WindowName(),
                 # NB Systray is incompatible with Wayland, consider using StatusNotifier instead
                 # widget.StatusNotifier(),
+                current_layout_icon,
+                group_box,
+                windowname_icon,
+                windowname,
                 volume_icon,
                 volume,
                 memory_icon,
                 memory,
+                net_icon,
+                net,
                 cpu_icon,
                 cpu,
+                tray_icon,
+                tray,
+                widget.Spacer(length=5),
                 clock_icon,
                 clock,
             ],
