@@ -173,56 +173,75 @@ def auto_switch(window):
 
 
 groups = [
-    Group("1", matches=[Match(wm_class="kitty")]),
     Group(
-        "2",
+        name="1",
+        matches=[
+            Match(wm_class="kitty"),
+        ],
+        label="",
+    ),
+    Group(
+        name="2",
         matches=[
             Match(wm_class="jetbrains-studio"),
             Match(wm_class="jetbrains-pycharm"),
             Match(wm_class="jetbrains-toolbox", title="JetBrains Toolbox"),
         ],
+        label="",
     ),
     Group(
-        "3",
+        name="3",
         matches=[
             Match(wm_class="firefox"),
         ],
+        label="󰈹",
     ),
     Group(
-        "4",
+        name="4",
         matches=[
             Match(wm_class="Nemo"),
             Match(wm_class="thunderbird"),
         ],
+        label="",
     ),
     Group(
-        "5",
+        name="5",
         matches=[
             Match(wm_class="obsidian"),
             Match(wm_class="Zathura"),
         ],
+        label="",
     ),
     Group(
-        "6",
+        name="6",
         matches=[
             Match(wm_class="TelegramDesktop"),
             Match(wm_class="webcord"),
         ],
+        label="",
     ),
     Group(
-        "7",
+        name="7",
         matches=[
-            Match(wm_class="steam"),
-            Match(wm_class="yad_v13_0"),
             Match(wm_class="muffon"),
         ],
+        label="󰝚",
     ),
     Group(
-        "8",
+        name="8",
         matches=[
             Match(wm_class="jamesdsp"),
             Match(wm_class="KeePassXC"),
         ],
+        label="",
+    ),
+    Group(
+        name="9",
+        matches=[
+            Match(wm_class="steam"),
+            Match(wm_class="yad_v13_0"),
+        ],
+        label="",
     ),
 ]
 
@@ -527,13 +546,13 @@ current_layout_icon = widget.CurrentLayoutIcon(
     background=colors[4],
 )
 group_box = widget.GroupBox(
-    fontsize=18,
+    fontsize=20,
     margin_y=3,
     margin_x=3,
     borderwidth=0,
     disable_drag=True,
     active=colors[7],
-    inactive=colors[16],
+    inactive=colors[7],
     hide_unused=True,
     rounded=True,
     highlight_method="block",
@@ -602,7 +621,7 @@ cpu_icon = widget.TextBox(
     foreground=colors[20],
 )
 cpu = widget.CPU(
-    format="{load_percent}%",
+    format="{load_percent:.0f}%",
     update_interval=3,
     foreground=colors[4],
 )
