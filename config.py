@@ -7,7 +7,7 @@ from libqtile import qtile, bar, widget, layout, hook
 from os import path, environ
 from subprocess import Popen
 
-# Apps/Scripts Variables {{{
+# App/Script Variables {{{
 
 home = path.expanduser("~")
 autostart_sh = home + "/.config/qtile/scripts/qtile_autostart"
@@ -263,18 +263,12 @@ for i in groups:
         ]
     )
 # }}}
-# Layouts Variables {{{
+# Layout/Widget Variables {{{
 
-var_bg_color = "#2e3440"
-var_active_fg_color = "#2e3440"
-var_inactive_bg_color = "#3d4555"
-var_inactive_fg_color = "#D8DEE9"
-var_urgent_fg_color = "#D8DEE9"
-var_normal_color = "#3d4555"
-var_border_width = 2
+border_width = 2
 margin = [5, 10, 10, 10]
 gap=[45, 5, 5, 5]
-var_font_name = "JetBrains Mono Nerd Font Mono"
+font_name = "JetBrains Mono Nerd Font Mono"
 
 colors = [
     ["#32363D", "#32363D"],  # 0
@@ -308,9 +302,9 @@ layouts = [
     # Extension of the Stack layout
     layout.Columns(
         border_focus=colors[4],
-        border_normal=var_normal_color,
+        border_normal=colors[20],
         border_on_single=False,
-        border_width=var_border_width,
+        border_width=border_width,
         fair=False,
         grow_amount=10,
         insert_position=0,
@@ -325,9 +319,9 @@ layouts = [
     # Layout inspired by bspwm
     layout.Bsp(
         border_focus=colors[4],
-        border_normal=var_normal_color,
+        border_normal=colors[20],
         border_on_single=False,
-        border_width=var_border_width,
+        border_width=border_width,
         fair=True,
         grow_amount=10,
         lower_right=True,
@@ -339,24 +333,24 @@ layouts = [
     # This layout divides the screen into a matrix of equally sized cells and places one window in each cell.
     layout.Matrix(
         border_focus=colors[4],
-        border_normal=var_normal_color,
-        border_width=var_border_width,
+        border_normal=colors[20],
+        border_width=border_width,
         columns=2,
         margin=margin,
     ),
     # Maximized layout
     layout.Max(
         border_focus=colors[4],
-        border_normal=var_normal_color,
-        border_width=var_border_width,
+        border_normal=colors[20],
+        border_width=border_width,
         margin=0,
     ),
     # Emulate the behavior of XMonad's default tiling scheme.
     layout.MonadTall(
         align=0,
         border_focus=colors[4],
-        border_normal=var_normal_color,
-        border_width=var_border_width,
+        border_normal=colors[20],
+        border_width=border_width,
         change_ratio=0.05,
         change_size=20,
         margin=0,
@@ -372,8 +366,8 @@ layouts = [
     layout.MonadThreeCol(
         align=0,
         border_focus=colors[4],
-        border_normal=var_normal_color,
-        border_width=var_border_width,
+        border_normal=colors[20],
+        border_width=border_width,
         change_ratio=0.05,
         change_size=20,
         main_centered=True,
@@ -390,8 +384,8 @@ layouts = [
     layout.MonadWide(
         align=0,
         border_focus=colors[4],
-        border_normal=var_normal_color,
-        border_width=var_border_width,
+        border_normal=colors[20],
+        border_width=border_width,
         change_ratio=0.05,
         change_size=20,
         margin=0,
@@ -406,8 +400,8 @@ layouts = [
     # Tries to tile all windows in the width/height ratio passed in
     layout.RatioTile(
         border_focus=colors[4],
-        border_normal=var_normal_color,
-        border_width=var_border_width,
+        border_normal=colors[20],
+        border_width=border_width,
         fancy=False,
         margin=margin,
         ratio=1.618,
@@ -418,8 +412,8 @@ layouts = [
     # A mathematical layout, Renders windows in a spiral form by splitting the screen based on a selected ratio.
     layout.Spiral(
         border_focus=colors[4],
-        border_normal=var_normal_color,
-        border_width=var_border_width,
+        border_normal=colors[20],
+        border_width=border_width,
         clockwise=True,
         main_pane="left",
         main_pane_ratio=None,
@@ -432,8 +426,8 @@ layouts = [
     layout.Stack(
         autosplit=False,
         border_focus=colors[4],
-        border_normal=var_normal_color,
-        border_width=var_border_width,
+        border_normal=colors[20],
+        border_width=border_width,
         fair=False,
         margin=margin,
         num_stacks=2,
@@ -443,9 +437,9 @@ layouts = [
         add_after_last=False,
         add_on_top=True,
         border_focus=colors[4],
-        border_normal=var_normal_color,
+        border_normal=colors[20],
         border_on_single=False,
-        border_width=var_border_width,
+        border_width=border_width,
         expand=True,
         margin=margin,
         margin_on_single=None,
@@ -460,14 +454,14 @@ layouts = [
     # This layout works just like Max but displays tree of the windows at the left border of the screen_rect, which allows you to overview all opened windows.
     layout.TreeTab(
         active_bg=colors[4],
-        active_fg=var_active_fg_color,
-        bg_color=var_bg_color,
-        border_width=var_border_width,
-        font=var_font_name,
+        active_fg=colors[20],
+        bg_color=colors[20],
+        border_width=border_width,
+        font=font_name,
         fontshadow=None,
         fontsize=14,
-        inactive_bg=var_inactive_bg_color,
-        inactive_fg=var_inactive_fg_color,
+        inactive_bg=colors[20],
+        inactive_fg=colors[19],
         level_shift=0,
         margin_left=0,
         margin_y=0,
@@ -484,15 +478,15 @@ layouts = [
         section_padding=10,
         section_top=10,
         sections=["Default"],
-        urgent_bg=colors[1],
-        urgent_fg=var_urgent_fg_color,
+        urgent_bg=colors[20],
+        urgent_fg=colors[19],
         vspace=5,
     ),
     # Tiling layout that works nice on vertically mounted monitors
     layout.VerticalTile(
         border_focus=colors[4],
-        border_normal=var_normal_color,
-        border_width=var_border_width,
+        border_normal=colors[20],
+        border_width=border_width,
         margin=margin,
     ),
     # A layout with single active windows, and few other previews at the right
@@ -506,8 +500,8 @@ layouts = [
     # Floating layout, which does nothing with windows but handles focus order
     layout.Floating(
         border_focus=colors[4],
-        border_normal=var_normal_color,
-        border_width=var_border_width,
+        border_normal=colors[20],
+        border_width=border_width,
         fullscreen_border_width=0,
         max_border_width=0,
     ),
@@ -532,14 +526,12 @@ class CustomClock(widget.Clock):
 
 # Default settings for bar widgets.
 widget_defaults = dict(
-    font=var_font_name,
+    font=font_name,
     fontsize=14,
     padding=10,
     background=colors[20],
+    foreground=colors[20],
 )
-
-# Same as `widget_defaults`, Default settings for extensions.
-extension_defaults = widget_defaults.copy()
 
 current_layout_icon = widget.CurrentLayoutIcon(
     scale=0.5,
@@ -559,14 +551,12 @@ group_box = widget.GroupBox(
     urgent_alert_method="line",
     urgent_border=colors[5],
     urgent_text=colors[7],
-    foreground=colors[20],
     use_mouse_wheel=True,
 )
 windowname_icon = widget.TextBox(
     text="",
     fontsize=20,
     background=colors[4],
-    foreground=colors[20],
 )
 windowname = widget.WindowName(
     foreground=colors[4],
@@ -575,7 +565,6 @@ volume_icon = widget.TextBox(
     text="󰕾",
     fontsize=20,
     background=colors[3],
-    foreground=colors[20],
 )
 volume = widget.Volume(
     mouse_callbacks={
@@ -589,7 +578,6 @@ memory_icon = widget.TextBox(
     text="",
     fontsize=20,
     background=colors[2],
-    foreground=colors[20],
 )
 memory = widget.Memory(
     format="{MemUsed:.0f}{mm}/{MemTotal:.0f}{mm}",
@@ -600,7 +588,6 @@ net_icon = widget.TextBox(
     text="󰑩",
     fontsize=20,
     background=colors[6],
-    foreground=colors[20],
 )
 net = widget.Net(
     interface="enp0s31f6",
@@ -613,7 +600,6 @@ cpu_icon = widget.TextBox(
     text="󰍛",
     fontsize=20,
     background=colors[4],
-    foreground=colors[20],
 )
 cpu = widget.CPU(
     format="{load_percent:.0f}%",
@@ -624,7 +610,6 @@ tray_icon = widget.TextBox(
     text="",
     fontsize=20,
     background=colors[5],
-    foreground=colors[20],
 )
 tray = widget.Systray(
     padding=5,
@@ -634,11 +619,16 @@ clock_icon = widget.TextBox(
     text="",
     fontsize=20,
     background=colors[1],
-    foreground=colors[20],
 )
 clock = CustomClock(
     foreground=colors[1],
 )
+
+# }}}
+# Extensions {{{
+
+# Same as `widget_defaults`, Default settings for extensions.
+extension_defaults = widget_defaults.copy()
 
 # }}}
 # Screens {{{
@@ -700,8 +690,8 @@ dgroups_app_rules = []  # type: list
 # The default floating layout to use. This allows you to set custom floating rules among other things if you wish.
 floating_layout = layout.Floating(
     border_focus=colors[4],
-    border_normal=var_normal_color,
-    border_width=var_border_width,
+    border_normal=colors[20],
+    border_width=border_width,
     float_rules=[
         # Run the utility of `xprop` to see the wm class and name of an X client.
         *layout.Floating.default_float_rules,
