@@ -1,3 +1,4 @@
+# vim:fileencoding=utf-8:foldmethod=marker
 # Keys
 from libqtile.config import EzKey as Key, EzKeyChord as KeyChord
 from libqtile.lazy import lazy
@@ -23,9 +24,8 @@ from subprocess import Popen
 from libqtile import hook, qtile
 
 
-# Environments ------------------------------
+# Apps/Scripts Variables {{{
 
-# Scripts/Apps variables
 home = path.expanduser("~")
 autostart_sh = home + "/.config/qtile/scripts/qtile_autostart"
 color_picker = home + "/.config/qtile/scripts/qtile_colorpicker"
@@ -43,17 +43,20 @@ password_manager = "keepassxc"
 rofi_applets = home + "/.config/qtile/scripts/"
 notify_cmd = "dunstify -u low -h string:x-dunst-stack-tag:qtileconfig"
 
-# System environments -----------------------
+# }}}
+# Environments {{{
+
 environ["KITTY_CONFIG_DIRECTORY"] = home + "/.config/qtile/kitty"
 
+# }}}
+# Autostart {{{
 
-# Startup ----------------------------------
 @hook.subscribe.startup_once
 def autostart():
     Popen([autostart_sh])
 
-
-# Key Bindings ------------------------------
+# }}}
+# Key Bindings {{{
 
 modifier_keys = {
     "M": "mod4",
@@ -166,8 +169,8 @@ keys = [
         name="Layouts",
     ),
 ]
-
-# Mouse Bindings ------------------------------
+# }}}
+# Mouse Key Bindings {{{
 
 # Drag floating layouts.
 mouse = [
@@ -176,8 +179,8 @@ mouse = [
     Click("M-2", lazy.window.bring_to_front()),
 ]
 
-# Groups -------------------------------------
-
+# }}}
+# Groups {{{
 
 # Auto-switching group when a new window is launched
 @hook.subscribe.client_managed
@@ -193,7 +196,7 @@ groups = [
         matches=[
             Match(wm_class="jetbrains-studio"),
             Match(wm_class="jetbrains-pycharm"),
-            Match(wm_class="jetbrains-toolbox"),
+            Match(wm_class="jetbrains-toolbox", title="JetBrains Toolbox"),
         ],
     ),
     Group(
@@ -257,37 +260,59 @@ for i in groups:
             ),
         ]
     )
+# }}}
+# Layouts Variables {{{
 
-# Layouts -----------------------------------
 var_bg_color = "#2e3440"
-var_active_bg_color = "#81A1C1"
 var_active_fg_color = "#2e3440"
 var_inactive_bg_color = "#3d4555"
 var_inactive_fg_color = "#D8DEE9"
-var_urgent_bg_color = "#BF616A"
 var_urgent_fg_color = "#D8DEE9"
-var_section_fg_color = "#EBCB8B"
-var_active_color = "#81A1C1"
 var_normal_color = "#3d4555"
 var_border_width = 2
-var_margin = [5, 5, 5, 5]
-var_gap_top = 45
-var_gap_bottom = 5
-var_gap_left = 5
-var_gap_right = 5
-var_font_name = "JetBrains Mono"
+margin = [5, 10, 10, 10]
+gap=[45, 5, 5, 5]
+var_font_name = "JetBrains Mono Nerd Font Mono"
+
+colors = [
+    ["#32363D", "#32363D"],  # 0
+    ["#BF616A", "#BF616A"],  # 1
+    ["#A3BE8C", "#A3BE8C"],  # 2
+    ["#EBCB8B", "#EBCB8B"],  # 3
+    ["#81A1C1", "#81A1C1"],  # 4
+    ["#B48EAD", "#B48EAD"],  # 5
+    ["#88C0D0", "#88C0D0"],  # 6
+    ["#E5E9F0", "#E5E9F0"],  # 7
+    ["#4C566A", "#4C566A"],  # 8
+    ["#BF616A", "#BF616A"],  # 9
+    ["#A3BE8C", "#A3BE8C"],  # 10
+    ["#EBCB8B", "#EBCB8B"],  # 11
+    ["#81A1C1", "#81A1C1"],  # 12
+    ["#B48EAD", "#B48EAD"],  # 13
+    ["#8FBCBB", "#8FBCBB"],  # 14
+    ["#ECEFF4", "#ECEFF4"],  # 15
+    ["#A8AFBC", "#A8AFBC"],  # 16 Inactive tab foreground
+    ["#343A46", "#343A46"],  # 17 Inactive tab background
+    ["#343A46", "#343A46"],  # 18 GroupBox background
+    ["#D8DEE9", "#D8DEE9"],  # 19 Foreground
+    ["#2E3440", "#2E3440"],  # 20 Background
+    ["#2E3440", "#2E3440"],  # 21 Selection foreground
+    ["#D8DEE9", "#D8DEE9"],  # 22 Selection background
+]
+#}}}
+# Layouts {{{
 
 layouts = [
     # Extension of the Stack layout
     layout.Columns(
-        border_focus=var_active_color,
+        border_focus=colors[4],
         border_normal=var_normal_color,
         border_on_single=False,
         border_width=var_border_width,
         fair=False,
         grow_amount=10,
         insert_position=0,
-        margin=var_margin,
+        margin=margin,
         margin_on_single=None,
         num_columns=2,
         split=True,
@@ -297,29 +322,29 @@ layouts = [
     ),
     # Layout inspired by bspwm
     layout.Bsp(
-        border_focus=var_active_color,
+        border_focus=colors[4],
         border_normal=var_normal_color,
         border_on_single=False,
         border_width=var_border_width,
         fair=True,
         grow_amount=10,
         lower_right=True,
-        margin=var_margin,
+        margin=margin,
         margin_on_single=None,
         ratio=1.6,
         wrap_clients=False,
     ),
     # This layout divides the screen into a matrix of equally sized cells and places one window in each cell.
     layout.Matrix(
-        border_focus=var_active_color,
+        border_focus=colors[4],
         border_normal=var_normal_color,
         border_width=var_border_width,
         columns=2,
-        margin=var_margin,
+        margin=margin,
     ),
     # Maximized layout
     layout.Max(
-        border_focus=var_active_color,
+        border_focus=colors[4],
         border_normal=var_normal_color,
         border_width=var_border_width,
         margin=0,
@@ -327,7 +352,7 @@ layouts = [
     # Emulate the behavior of XMonad's default tiling scheme.
     layout.MonadTall(
         align=0,
-        border_focus=var_active_color,
+        border_focus=colors[4],
         border_normal=var_normal_color,
         border_width=var_border_width,
         change_ratio=0.05,
@@ -344,7 +369,7 @@ layouts = [
     # Emulate the behavior of XMonad's ThreeColumns layout.
     layout.MonadThreeCol(
         align=0,
-        border_focus=var_active_color,
+        border_focus=colors[4],
         border_normal=var_normal_color,
         border_width=var_border_width,
         change_ratio=0.05,
@@ -362,7 +387,7 @@ layouts = [
     # Emulate the behavior of XMonad's horizontal tiling scheme.
     layout.MonadWide(
         align=0,
-        border_focus=var_active_color,
+        border_focus=colors[4],
         border_normal=var_normal_color,
         border_width=var_border_width,
         change_ratio=0.05,
@@ -378,11 +403,11 @@ layouts = [
     ),
     # Tries to tile all windows in the width/height ratio passed in
     layout.RatioTile(
-        border_focus=var_active_color,
+        border_focus=colors[4],
         border_normal=var_normal_color,
         border_width=var_border_width,
         fancy=False,
-        margin=var_margin,
+        margin=margin,
         ratio=1.618,
         ratio_increment=0.1,
     ),
@@ -390,7 +415,7 @@ layouts = [
     layout.Slice(match=None, side="left", width=256),
     # A mathematical layout, Renders windows in a spiral form by splitting the screen based on a selected ratio.
     layout.Spiral(
-        border_focus=var_active_color,
+        border_focus=colors[4],
         border_normal=var_normal_color,
         border_width=var_border_width,
         clockwise=True,
@@ -404,23 +429,23 @@ layouts = [
     # A layout composed of stacks of windows
     layout.Stack(
         autosplit=False,
-        border_focus=var_active_color,
+        border_focus=colors[4],
         border_normal=var_normal_color,
         border_width=var_border_width,
         fair=False,
-        margin=var_margin,
+        margin=margin,
         num_stacks=2,
     ),
     # A layout with two stacks of windows dividing the screen
     layout.Tile(
         add_after_last=False,
         add_on_top=True,
-        border_focus=var_active_color,
+        border_focus=colors[4],
         border_normal=var_normal_color,
         border_on_single=False,
         border_width=var_border_width,
         expand=True,
-        margin=var_margin,
+        margin=margin,
         margin_on_single=None,
         master_length=1,
         master_match=None,
@@ -432,7 +457,7 @@ layouts = [
     ),
     # This layout works just like Max but displays tree of the windows at the left border of the screen_rect, which allows you to overview all opened windows.
     layout.TreeTab(
-        active_bg=var_active_bg_color,
+        active_bg=colors[4],
         active_fg=var_active_fg_color,
         bg_color=var_bg_color,
         border_width=var_border_width,
@@ -451,87 +476,169 @@ layouts = [
         place_right=False,
         previous_on_rm=False,
         section_bottom=0,
-        section_fg=var_section_fg_color,
+        section_fg=colors[3],
         section_fontsize=14,
         section_left=10,
         section_padding=10,
         section_top=10,
         sections=["Default"],
-        urgent_bg=var_urgent_bg_color,
+        urgent_bg=colors[1],
         urgent_fg=var_urgent_fg_color,
         vspace=5,
     ),
     # Tiling layout that works nice on vertically mounted monitors
     layout.VerticalTile(
-        border_focus=var_active_color,
+        border_focus=colors[4],
         border_normal=var_normal_color,
         border_width=var_border_width,
-        margin=var_margin,
+        margin=margin,
     ),
     # A layout with single active windows, and few other previews at the right
     layout.Zoomy(
         columnwidth=300,
-        margin=var_margin,
+        margin=margin,
         property_big="1.0",
         property_name="ZOOM",
         property_small="0.1",
     ),
     # Floating layout, which does nothing with windows but handles focus order
     layout.Floating(
-        border_focus=var_active_color,
+        border_focus=colors[4],
         border_normal=var_normal_color,
         border_width=var_border_width,
         fullscreen_border_width=0,
         max_border_width=0,
     ),
 ]
+# }}}
+# Widgets {{{
 
-# Screens ----------------------------------
+# Default settings for bar widgets.
+widget_defaults = dict(
+    font=var_font_name,
+    fontsize=14,
+    padding=10,
+)
 
-# Default Qtile Bar (commented)
-"""
+# Same as `widget_defaults`, Default settings for extensions.
+extension_defaults = widget_defaults.copy()
+
+current_layout_icon = widget.CurrentLayoutIcon(
+    scale=0.5,
+    background=colors[4],
+)
+group_box = widget.GroupBox(
+    fontsize=18,
+    margin_y=3,
+    margin_x=3,
+    padding_y=10,
+    padding_x=10,
+    borderwidth=0,
+    disable_drag=True,
+    active=colors[7],
+    inactive=colors[16],
+    hide_unused=True,
+    rounded=True,
+    highlight_method="block",
+    highlight_color=colors[1],
+    this_current_screen_border=colors[4],
+    this_screen_border=colors[0],
+    other_current_screen_border=colors[13],
+    other_screen_border=colors[13],
+    urgent_alert_method="line",
+    urgent_border=colors[6],
+    urgent_text=colors[1],
+    foreground=colors[0],
+    background=colors[20],
+    use_mouse_wheel=True,
+)
+volume_icon = widget.TextBox(
+    text="󰕾",
+    fontsize=20,
+    foreground=colors[20],
+    background=colors[3],
+)
+volume = widget.Volume(
+    foreground=colors[3],
+    background=colors[20],
+    mouse_callbacks={
+        'Button1': lambda qtile=qtile: qtile.cmd_spawn('pactl set-sink-volume @DEFAULT_SINK@ +5%'),
+        'Button3': lambda qtile=qtile: qtile.cmd_spawn('pactl set-sink-volume @DEFAULT_SINK@ -5%'),
+    },
+)
+memory_icon = widget.TextBox(
+    text="",
+    fontsize=20,
+    background=colors[2],
+    foreground=colors[20],
+)
+memory = widget.Memory(
+    format="{MemUsed: .0f}{mm} /{MemTotal: .0f}{mm} ",
+    measure_mem="G",
+    background=colors[20],
+    foreground=colors[2],
+)
+cpu_icon = widget.TextBox(
+    text="󰍛",
+    fontsize=20,
+    background=colors[4],
+    foreground=colors[20],
+)
+cpu = widget.CPU(
+    format="{load_percent}%",
+    update_interval=1.0,
+    background=colors[20],
+    foreground=colors[4],
+)
+clock_icon = widget.TextBox(
+    text="",
+    fontsize=20,
+    background=colors[5],
+    foreground=colors[20],
+)
+clock = widget.Clock(
+    format="%I:%M",
+    background=colors[20],
+    foreground=colors[5],
+)
+tray = widget.Systray(
+    background=colors[20],
+    padding=5,
+    icon_size=18,
+)
+
+# }}}
+# Screens {{{
+
 screens = [
     Screen(
-        bottom=bar.Bar(
+        top=bar.Bar(
             [
-                widget.CurrentLayout(),
-                widget.GroupBox(),
-                widget.Prompt(),
+                current_layout_icon,
+                group_box,
+                tray,
                 widget.WindowName(),
-                widget.Chord(
-                    chords_colors={
-                        "launch": ("#ff0000", "#ffffff"),
-                    },
-                    name_transform=lambda name: name.upper(),
-                ),
                 # NB Systray is incompatible with Wayland, consider using StatusNotifier instead
-                #widget.StatusNotifier(),
-                widget.Systray(),
-                widget.Clock(format="%I:%M %p"),
-                widget.QuickExit(),
+                # widget.StatusNotifier(),
+                volume_icon,
+                volume,
+                memory_icon,
+                memory,
+                cpu_icon,
+                cpu,
+                clock_icon,
+                clock,
             ],
-            34,
-            background=["000000", "101010"],
-            margin=[0,0,0,0],
-            opacity=1.0,
-            border_width=[2, 0, 0, 0],
-            border_color=["303030", "000000", "000000", "000000"]
+            size=28,
+            background=["#2d333f", "#2d333f"],
+            margin=[10, 10, 5, 10],
+            opacity=1,
         ),
-    ),
-]
-"""
-
-# Any third-party statusbar (polybar) with Gaps
-screens = [
-    Screen(
-        right=bar.Gap(var_gap_right),
-        left=bar.Gap(var_gap_left),
-        bottom=bar.Gap(var_gap_bottom),
-        top=bar.Gap(var_gap_top),
     )
 ]
 
-# General Configuration Variables ------------------------------
+# }}}
+# General Configuration Variables {{{
 
 # If a window requests to be fullscreen, it is automatically fullscreened.
 # Set this to false if you only want windows to be fullscreen if you ask them to be.
@@ -554,7 +661,7 @@ dgroups_app_rules = []  # type: list
 
 # The default floating layout to use. This allows you to set custom floating rules among other things if you wish.
 floating_layout = layout.Floating(
-    border_focus=var_active_color,
+    border_focus=colors[4],
     border_normal=var_normal_color,
     border_width=var_border_width,
     float_rules=[
@@ -581,16 +688,6 @@ focus_on_window_activation = "smart"
 # Controls whether or not focus follows the mouse around as it moves across windows in a layout.
 follow_mouse_focus = True
 
-# Default settings for bar widgets.
-widget_defaults = dict(
-    font=var_font_name,
-    fontsize=14,
-    padding=5,
-)
-
-# Same as `widget_defaults`, Default settings for extensions.
-extension_defaults = widget_defaults.copy()
-
 # Controls whether or not to automatically reconfigure screens when there are changes in randr output configuration.
 reconfigure_screens = True
 
@@ -610,3 +707,4 @@ wmname = "Qtile"
 
 # When using the Wayland backend, this can be used to configure input devices.
 wl_input_rules = None
+# }}}

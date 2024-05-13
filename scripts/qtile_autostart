@@ -27,7 +27,7 @@ hsetroot -cover "$qdir"/theme/wallpaper
 "$qdir"/scripts/qtile_dunst
 
 # Lauch polybar
-"$qdir"/scripts/qtile_bar
+# "$qdir"/scripts/qtile_bar
 
 # Lauch compositor
 "$qdir"/scripts/qtile_comp
