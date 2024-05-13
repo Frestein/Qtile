@@ -558,13 +558,11 @@ group_box = widget.GroupBox(
     highlight_method="block",
     highlight_color=colors[1],
     this_current_screen_border=colors[4],
-    this_screen_border=colors[0],
-    other_current_screen_border=colors[13],
-    other_screen_border=colors[13],
+    this_screen_border=colors[20],
     urgent_alert_method="line",
-    urgent_border=colors[6],
-    urgent_text=colors[1],
-    foreground=colors[0],
+    urgent_border=colors[5],
+    urgent_text=colors[7],
+    foreground=colors[20],
     use_mouse_wheel=True,
 )
 windowname_icon = widget.TextBox(
