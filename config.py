@@ -115,8 +115,8 @@ keys = [
     Key("M-z", lazy.window.toggle_floating(), desc="Put the focused window to/from floating mode"),
     Key("M-f", lazy.window.toggle_fullscreen(), desc="Put the focused window to/from fullscreen mode"),
     # Go to next/prev group
-    Key("M-A-<Right>", lazy.screen.next_group(), desc="Move to the group on the right"),
-    Key("M-A-<Left>", lazy.screen.prev_group(), desc="Move to the group on the left"),
+    Key("C-A-<bracketright>", lazy.screen.next_group(skip_empty=1), desc="Move to the group on the right"),
+    Key("C-A-<bracketleft>", lazy.screen.prev_group(skip_empty=1), desc="Move to the group on the left"),
     # Back-n-forth groups
     Key("M-b", lazy.screen.toggle_group(), desc="Move to the last visited group"),
     # Change focus to other window
@@ -592,7 +592,7 @@ net_icon = widget.TextBox(
 net = widget.Net(
     interface="enp0s31f6",
     format="{down:.0f} {down_suffix:<0}/{up:.0f} {up_suffix:<0}",
-    update_interval=3,
+    update_interval=5,
     use_bits=True,
     foreground=colors[6],
 )
@@ -603,7 +603,7 @@ cpu_icon = widget.TextBox(
 )
 cpu = widget.CPU(
     format="{load_percent:.0f}%",
-    update_interval=3,
+    update_interval=5,
     foreground=colors[4],
 )
 tray_icon = widget.TextBox(
@@ -658,10 +658,14 @@ screens = [
                 clock,
             ],
             size=28,
-            background=["#2d333f", "#2d333f"],
+            background=colors[20],
             margin=[10, 10, 5, 10],
             opacity=1,
         ),
+        # Set static wallpaper.
+        wallpaper=home + "/.config/qtile/theme/wallpaper",
+        # Set wallpaper mode to "fill" or "stretch".
+        wallpaper_mode="fill",
     )
 ]
 

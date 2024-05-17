@@ -20,9 +20,6 @@ xsettingsd --config="$qdir"/xsettingsd &
 # Fix cursor
 xsetroot -cursor_name left_ptr
 
-# Restore wallpaper
-hsetroot -cover "$qdir"/theme/wallpaper
-
 # Lauch notification daemon
 "$qdir"/scripts/qtile_dunst
 
