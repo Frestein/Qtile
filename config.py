@@ -71,14 +71,11 @@ modifier_keys = {
 }
 
 keys = [
-    # A list of available commands that can be bound to keys can be found
-    # at https://docs.qtile.org/en/latest/manual/config/lazy.html
     # Terminal --
     Key("M-<Return>", lazy.spawn(terminal), desc="Launch terminal"),
     # GUI Apps --
     Key("M-a", lazy.spawn(android_studio), desc="Launch Android Studio"),
     Key("M-w", lazy.spawn(web_browser), desc="Launch web browser"),
-    Key("M-m", lazy.spawn(music_player), desc="Launch music player"),
     Key("M-k", lazy.spawn(password_manager), desc="Launch password manager"),
     Key("M-t", lazy.spawn(telegram), desc="Launch telegram"),
     Key("M-d", lazy.spawn(discord), desc="Launch discord"),
@@ -91,8 +88,10 @@ keys = [
         "A-<F1>",
         lazy.run_extension(
             extension.J4DmenuDesktop(
+                dmenu_prompt="Applications",
                 dmenu_command="dmenu -vi -c",
-                dmenu_lines=5,
+                dmenu_ignorecase=True,
+                dmenu_lines=10,
             )
         ),
         desc="Application List",
@@ -101,16 +100,16 @@ keys = [
         "A-q",
         lazy.run_extension(
             extension.CommandSet(
-                dmenu_prompt="Session:",
+                dmenu_prompt="Session",
                 commands={
-                    "lock": 'betterlockscreen --lock --time-format %H:%M"',
-                    "logout": "qtile cmd-obj -o cmd -f shutdown",
-                    "reload": "qtile cmd-obj -o cmd -f restart",
-                    "reboot": "systemctl reboot",
-                    "shutdown": "systemctl poweroff",
+                    "Lock": 'betterlockscreen --lock --time-format %H:%M"',
+                    "Logout": "qtile cmd-obj -o cmd -f shutdown",
+                    "Reload": "qtile cmd-obj -o cmd -f restart",
+                    "Reboot": "systemctl reboot",
+                    "Shutdown": "systemctl poweroff",
                 },
                 dmenu_command="dmenu -vi -noi -c",
-                dmenu_lines=5,
+                dmenu_lines=10,
             )
         ),
         desc="Session Manager",
@@ -119,10 +118,10 @@ keys = [
         "A-w",
         lazy.run_extension(
             extension.WindowList(
-                dmenu_prompt="Windows:",
+                dmenu_prompt="Windows",
                 item_format="{group}: {window}",
                 dmenu_command="dmenu -vi -noi -c",
-                dmenu_lines=5,
+                dmenu_lines=10,
             )
         ),
         desc="Window List",
@@ -131,8 +130,10 @@ keys = [
         "A-r",
         lazy.run_extension(
             extension.DmenuRun(
+                dmenu_prompt="󰜎 ",
                 dmenu_command="dmenu_run -vi -c",
-                dmenu_lines=5,
+                dmenu_ignorecase=True,
+                dmenu_lines=10,
             )
         ),
         desc="Runner",
@@ -573,7 +574,6 @@ clock = CustomClock(
 # Extensions {{{
 
 extension_defaults = dict(
-    dmenu_prompt="󰜎 ",
     font=font_name,
     background=colors[0],
     foreground=colors[5],
