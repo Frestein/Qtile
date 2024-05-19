@@ -12,7 +12,7 @@ from subprocess import Popen
 home = path.expanduser("~")
 autostart_sh = home + "/.config/qtile/scripts/qtile_autostart"
 color_picker = home + "/.config/qtile/scripts/qtile_colorpicker"
-network_manager = home + "/.config/qtile/scripts/networkmanager",
+network_manager = home + "/.config/qtile/scripts/networkmanager"
 volume = home + "/.config/qtile/scripts/qtile_volume"
 screenshot = home + "/.config/qtile/scripts/qtile_screenshot"
 file_manager = "nemo"
@@ -88,13 +88,13 @@ keys = [
         "A-<F1>",
         lazy.run_extension(
             extension.J4DmenuDesktop(
-                dmenu_prompt="Applications",
-                dmenu_command="dmenu -vi -c",
+                dmenu_prompt="Apps",
+                dmenu_command="dmenu -vi -c -bw 2",
                 dmenu_ignorecase=True,
                 dmenu_lines=10,
             )
         ),
-        desc="Application List",
+        desc="Application Launcher",
     ),
     Key(
         "A-q",
@@ -108,7 +108,7 @@ keys = [
                     "Reboot": "systemctl reboot",
                     "Shutdown": "systemctl poweroff",
                 },
-                dmenu_command="dmenu -vi -noi -c",
+                dmenu_command="dmenu -vi -noi -c -bw 2",
                 dmenu_lines=10,
             )
         ),
@@ -120,7 +120,7 @@ keys = [
             extension.WindowList(
                 dmenu_prompt="Windows",
                 item_format="{group}: {window}",
-                dmenu_command="dmenu -vi -noi -c",
+                dmenu_command="dmenu -vi -noi -c -bw 2",
                 dmenu_lines=10,
             )
         ),
@@ -131,7 +131,7 @@ keys = [
         lazy.run_extension(
             extension.DmenuRun(
                 dmenu_prompt="󰜎 ",
-                dmenu_command="dmenu_run -vi -c",
+                dmenu_command="dmenu_run -vi -c -bw 2",
                 dmenu_ignorecase=True,
                 dmenu_lines=10,
             )
@@ -141,7 +141,7 @@ keys = [
     Key(
         "A-n",
         lazy.run_extension(
-            extension.DmenuRun(
+            extension.Dmenu(
                 dmenu_command=network_manager,
             )
         ),
@@ -413,7 +413,7 @@ layouts = [
         border_width=border_width,
         expand=True,
         margin=margin,
-        margin_on_single=None,
+        margin_on_single=margin,
         master_length=1,
         master_match=None,
         max_ratio=0.85,
@@ -521,7 +521,7 @@ net_icon = widget.TextBox(
 net = widget.Net(
     mouse_callbacks={
         "Button1": lazy.run_extension(
-            extension.DmenuRun(
+            extension.Dmenu(
                 dmenu_command=network_manager,
             )
         ),
@@ -575,6 +575,7 @@ clock = CustomClock(
 
 extension_defaults = dict(
     font=font_name,
+    fontsize=14,
     background=colors[0],
     foreground=colors[5],
     selected_background=colors[9],

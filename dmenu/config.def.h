@@ -26,6 +26,8 @@ static unsigned int lines      = 0;
  */
 static const char worddelimiters[] = " ";
 
+/* Size of the window border */
+static unsigned int border_width = 0;
 /*
  * -vi option; if nonzero, vi mode is always enabled and can be
  * accessed with the global_esc keysym + mod mask

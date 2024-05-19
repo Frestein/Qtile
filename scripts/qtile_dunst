@@ -5,7 +5,7 @@ DIR="$HOME/.config/qtile"
 
 # Launch dunst daemon
 if [[ $(pidof dunst) ]]; then
-	pkill dunst
+  pkill dunst
 fi
 
 dunst -config "$DIR"/dunstrc &
