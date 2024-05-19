@@ -12,7 +12,7 @@ from subprocess import Popen
 home = path.expanduser("~")
 autostart_sh = home + "/.config/qtile/scripts/qtile_autostart"
 color_picker = home + "/.config/qtile/scripts/qtile_colorpicker"
-polybar = home + "/.config/qtile/scripts/qtile_bar"
+network_manager = home + "/.config/qtile/scripts/networkmanager",
 volume = home + "/.config/qtile/scripts/qtile_volume"
 screenshot = home + "/.config/qtile/scripts/qtile_screenshot"
 file_manager = "nemo"
@@ -84,8 +84,6 @@ keys = [
     Key("M-d", lazy.spawn(discord), desc="Launch discord"),
     Key("M-S-f", lazy.spawn(file_manager), desc="Launch file manager"),
     # Rofi Applets --
-    # Key("A-<F1>", lazy.spawn(rofi_applets + "rofi_launcher"), desc="Run application launcher"),
-    Key("M-n", lazy.spawn(rofi_applets + "network_menu"), desc="Run network manager applet"),
     Key("M-r", lazy.spawn(rofi_applets + "rofi_asroot"), desc="Run asroot applet"),
     Key("M-s", lazy.spawn(rofi_applets + "rofi_screenshot"), desc="Run screenshot applet"),
     # Dmenu Applets --
@@ -94,35 +92,10 @@ keys = [
         lazy.run_extension(
             extension.J4DmenuDesktop(
                 dmenu_command="dmenu -vi -c",
-                dmenu_bottom=True,
                 dmenu_lines=5,
             )
         ),
-        desc="Run dmenu runner",
-    ),
-    Key(
-        "A-r",
-        lazy.run_extension(
-            extension.DmenuRun(
-                dmenu_command="dmenu_run -vi -c",
-                dmenu_bottom=True,
-                dmenu_lines=5,
-            )
-        ),
-        desc="Run dmenu runner",
-    ),
-    Key(
-        "A-w",
-        lazy.run_extension(
-            extension.WindowList(
-                dmenu_prompt="Windows:",
-                item_format="{group}: {window}",
-                dmenu_command="dmenu -vi -noi -c",
-                dmenu_bottom=True,
-                dmenu_lines=5,
-            )
-        ),
-        desc="window list",
+        desc="Application List",
     ),
     Key(
         "A-q",
@@ -137,11 +110,41 @@ keys = [
                     "shutdown": "systemctl poweroff",
                 },
                 dmenu_command="dmenu -vi -noi -c",
-                dmenu_bottom=True,
                 dmenu_lines=5,
             )
         ),
-        desc="dmenu session manager",
+        desc="Session Manager",
+    ),
+    Key(
+        "A-w",
+        lazy.run_extension(
+            extension.WindowList(
+                dmenu_prompt="Windows:",
+                item_format="{group}: {window}",
+                dmenu_command="dmenu -vi -noi -c",
+                dmenu_lines=5,
+            )
+        ),
+        desc="Window List",
+    ),
+    Key(
+        "A-r",
+        lazy.run_extension(
+            extension.DmenuRun(
+                dmenu_command="dmenu_run -vi -c",
+                dmenu_lines=5,
+            )
+        ),
+        desc="Runner",
+    ),
+    Key(
+        "A-n",
+        lazy.run_extension(
+            extension.DmenuRun(
+                dmenu_command=network_manager,
+            )
+        ),
+        desc="Network Manager",
     ),
     # Function keys : Volume --
     Key("<XF86AudioRaiseVolume>", lazy.spawn(volume + " --inc"), desc="Raise speaker volume"),
@@ -515,6 +518,13 @@ net_icon = widget.TextBox(
     background=colors[8],
 )
 net = widget.Net(
+    mouse_callbacks={
+        "Button1": lazy.run_extension(
+            extension.DmenuRun(
+                dmenu_command=network_manager,
+            )
+        ),
+    },
     interface="enp0s31f6",
     format="{down:.0f} {down_suffix:<0}/{up:.0f} {up_suffix:<0}",
     update_interval=5,
