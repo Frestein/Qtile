@@ -3,7 +3,7 @@ from libqtile.config import EzKey as Key, EzKeyChord as KeyChord
 from libqtile.config import EzClick as Click, EzDrag as Drag
 from libqtile.config import Group, Match, Screen
 from libqtile.lazy import lazy
-from libqtile import qtile, bar, widget, layout, hook
+from libqtile import qtile, bar, widget, extension, layout, hook
 from os import path, environ
 from subprocess import Popen
 
@@ -26,6 +26,26 @@ password_manager = "keepassxc"
 rofi_applets = home + "/.config/qtile/scripts/"
 notify_cmd = "dunstify -u low -h string:x-dunst-stack-tag:qtileconfig"
 
+font_name = "JetBrains Mono Nerd Font Mono"
+colors = [
+    "#2E3440",  # 0
+    "#3B4252",  # 1
+    "#434C5E",  # 2
+    "#4C566A",  # 3
+    "#D8DEE9",  # 4
+    "#E5E9F0",  # 5
+    "#ECEFF4",  # 6
+    "#8FBCBB",  # 7
+    "#88C0D0",  # 8
+    "#81A1C1",  # 9
+    "#5E81AC",  # 10
+    "#BF616A",  # 11
+    "#D08770",  # 12
+    "#EBCB8B",  # 13
+    "#A3BE8C",  # 14
+    "#B48EAD",  # 15
+]
+
 # }}}
 # Environments {{{
 
@@ -34,9 +54,11 @@ environ["KITTY_CONFIG_DIRECTORY"] = home + "/.config/qtile/kitty"
 # }}}
 # Autostart {{{
 
+
 @hook.subscribe.startup_once
 def autostart():
     Popen([autostart_sh])
+
 
 # }}}
 # Key Bindings {{{
@@ -62,12 +84,65 @@ keys = [
     Key("M-d", lazy.spawn(discord), desc="Launch discord"),
     Key("M-S-f", lazy.spawn(file_manager), desc="Launch file manager"),
     # Rofi Applets --
-    Key("A-<F1>", lazy.spawn(rofi_applets + "rofi_launcher"), desc="Run application launcher"),
-    Key("M-r", lazy.spawn(rofi_applets + "rofi_runner"), desc="Run command runner"),
+    # Key("A-<F1>", lazy.spawn(rofi_applets + "rofi_launcher"), desc="Run application launcher"),
     Key("M-n", lazy.spawn(rofi_applets + "network_menu"), desc="Run network manager applet"),
-    Key("M-x", lazy.spawn(rofi_applets + "rofi_powermenu"), desc="Run powermenu applet"),
-    Key("A-r", lazy.spawn(rofi_applets + "rofi_asroot"), desc="Run asroot applet"),
+    Key("M-r", lazy.spawn(rofi_applets + "rofi_asroot"), desc="Run asroot applet"),
     Key("M-s", lazy.spawn(rofi_applets + "rofi_screenshot"), desc="Run screenshot applet"),
+    # Dmenu Applets --
+    Key(
+        "A-<F1>",
+        lazy.run_extension(
+            extension.J4DmenuDesktop(
+                dmenu_command="dmenu -vi -c",
+                dmenu_bottom=True,
+                dmenu_lines=5,
+            )
+        ),
+        desc="Run dmenu runner",
+    ),
+    Key(
+        "A-r",
+        lazy.run_extension(
+            extension.DmenuRun(
+                dmenu_command="dmenu_run -vi -c",
+                dmenu_bottom=True,
+                dmenu_lines=5,
+            )
+        ),
+        desc="Run dmenu runner",
+    ),
+    Key(
+        "A-w",
+        lazy.run_extension(
+            extension.WindowList(
+                dmenu_prompt="Windows:",
+                item_format="{group}: {window}",
+                dmenu_command="dmenu -vi -noi -c",
+                dmenu_bottom=True,
+                dmenu_lines=5,
+            )
+        ),
+        desc="window list",
+    ),
+    Key(
+        "A-q",
+        lazy.run_extension(
+            extension.CommandSet(
+                dmenu_prompt="Session:",
+                commands={
+                    "lock": 'betterlockscreen --lock --time-format %H:%M"',
+                    "logout": "qtile cmd-obj -o cmd -f shutdown",
+                    "reload": "qtile cmd-obj -o cmd -f restart",
+                    "reboot": "systemctl reboot",
+                    "shutdown": "systemctl poweroff",
+                },
+                dmenu_command="dmenu -vi -noi -c",
+                dmenu_bottom=True,
+                dmenu_lines=5,
+            )
+        ),
+        desc="dmenu session manager",
+    ),
     # Function keys : Volume --
     Key("<XF86AudioRaiseVolume>", lazy.spawn(volume + " --inc"), desc="Raise speaker volume"),
     Key("<XF86AudioLowerVolume>", lazy.spawn(volume + " --dec"), desc="Lower speaker volume"),
@@ -92,7 +167,6 @@ keys = [
     # Control Qtile
     Key("M-C-r", lazy.reload_config(), lazy.spawn(notify_cmd + ' "Configuration Reloaded!"'), desc="Reload the config"),
     Key("M-C-s", lazy.restart(), lazy.spawn(notify_cmd + ' "Restarting Qtile..."'), desc="Restart Qtile"),
-    Key("M-C-q", lazy.shutdown(), lazy.spawn(notify_cmd + ' "Exiting Qtile..."'), desc="Shutdown Qtile"),
     # Switch between windows
     Key("M-<Left>", lazy.layout.left(), desc="Move focus to left"),
     Key("M-<Right>", lazy.layout.right(), desc="Move focus to right"),
@@ -152,6 +226,7 @@ keys = [
         name="Layouts",
     ),
 ]
+
 # }}}
 # Mouse Key Bindings {{{
 
@@ -160,10 +235,12 @@ mouse = [
     Drag("M-1", lazy.window.set_position_floating(), start=lazy.window.get_position()),
     Drag("M-3", lazy.window.set_size_floating(), start=lazy.window.get_size()),
     Click("M-2", lazy.window.bring_to_front()),
+    Click("<Button10>", lazy.spawn("playerctl play-pause")),
 ]
 
 # }}}
 # Groups {{{
+
 
 # Auto-switching group when a new window is launched
 @hook.subscribe.client_managed
@@ -262,47 +339,22 @@ for i in groups:
             ),
         ]
     )
+
 # }}}
 # Layout/Widget Variables {{{
 
 border_width = 2
 margin = [5, 10, 10, 10]
-gap=[45, 5, 5, 5]
-font_name = "JetBrains Mono Nerd Font Mono"
+gap = [45, 5, 5, 5]
 
-colors = [
-    ["#32363D", "#32363D"],  # 0
-    ["#BF616A", "#BF616A"],  # 1
-    ["#A3BE8C", "#A3BE8C"],  # 2
-    ["#EBCB8B", "#EBCB8B"],  # 3
-    ["#81A1C1", "#81A1C1"],  # 4
-    ["#B48EAD", "#B48EAD"],  # 5
-    ["#88C0D0", "#88C0D0"],  # 6
-    ["#E5E9F0", "#E5E9F0"],  # 7
-    ["#4C566A", "#4C566A"],  # 8
-    ["#BF616A", "#BF616A"],  # 9
-    ["#A3BE8C", "#A3BE8C"],  # 10
-    ["#EBCB8B", "#EBCB8B"],  # 11
-    ["#81A1C1", "#81A1C1"],  # 12
-    ["#B48EAD", "#B48EAD"],  # 13
-    ["#8FBCBB", "#8FBCBB"],  # 14
-    ["#ECEFF4", "#ECEFF4"],  # 15
-    ["#A8AFBC", "#A8AFBC"],  # 16 Inactive tab foreground
-    ["#343A46", "#343A46"],  # 17 Inactive tab background
-    ["#343A46", "#343A46"],  # 18 GroupBox background
-    ["#D8DEE9", "#D8DEE9"],  # 19 Foreground
-    ["#2E3440", "#2E3440"],  # 20 Background
-    ["#2E3440", "#2E3440"],  # 21 Selection foreground
-    ["#D8DEE9", "#D8DEE9"],  # 22 Selection background
-]
-#}}}
+# }}}
 # Layouts {{{
 
 layouts = [
     # Extension of the Stack layout
     layout.Columns(
-        border_focus=colors[4],
-        border_normal=colors[20],
+        border_focus=colors[9],
+        border_normal=colors[0],
         border_on_single=False,
         border_width=border_width,
         fair=False,
@@ -318,8 +370,8 @@ layouts = [
     ),
     # Layout inspired by bspwm
     layout.Bsp(
-        border_focus=colors[4],
-        border_normal=colors[20],
+        border_focus=colors[9],
+        border_normal=colors[0],
         border_on_single=False,
         border_width=border_width,
         fair=True,
@@ -330,103 +382,18 @@ layouts = [
         ratio=1.6,
         wrap_clients=False,
     ),
-    # This layout divides the screen into a matrix of equally sized cells and places one window in each cell.
-    layout.Matrix(
-        border_focus=colors[4],
-        border_normal=colors[20],
-        border_width=border_width,
-        columns=2,
-        margin=margin,
-    ),
     # Maximized layout
     layout.Max(
-        border_focus=colors[4],
-        border_normal=colors[20],
+        border_focus=colors[9],
+        border_normal=colors[0],
         border_width=border_width,
-        margin=0,
-    ),
-    # Emulate the behavior of XMonad's default tiling scheme.
-    layout.MonadTall(
-        align=0,
-        border_focus=colors[4],
-        border_normal=colors[20],
-        border_width=border_width,
-        change_ratio=0.05,
-        change_size=20,
-        margin=0,
-        max_ratio=0.75,
-        min_ratio=0.25,
-        min_secondary_size=85,
-        new_client_position="after_current",
-        ratio=0.5,
-        single_border_width=None,
-        single_margin=None,
-    ),
-    # Emulate the behavior of XMonad's ThreeColumns layout.
-    layout.MonadThreeCol(
-        align=0,
-        border_focus=colors[4],
-        border_normal=colors[20],
-        border_width=border_width,
-        change_ratio=0.05,
-        change_size=20,
-        main_centered=True,
-        margin=0,
-        max_ratio=0.75,
-        min_ratio=0.25,
-        min_secondary_size=85,
-        new_client_position="top",
-        ratio=0.5,
-        single_border_width=None,
-        single_margin=None,
-    ),
-    # Emulate the behavior of XMonad's horizontal tiling scheme.
-    layout.MonadWide(
-        align=0,
-        border_focus=colors[4],
-        border_normal=colors[20],
-        border_width=border_width,
-        change_ratio=0.05,
-        change_size=20,
-        margin=0,
-        max_ratio=0.75,
-        min_ratio=0.25,
-        min_secondary_size=85,
-        new_client_position="after_current",
-        ratio=0.5,
-        single_border_width=None,
-        single_margin=None,
-    ),
-    # Tries to tile all windows in the width/height ratio passed in
-    layout.RatioTile(
-        border_focus=colors[4],
-        border_normal=colors[20],
-        border_width=border_width,
-        fancy=False,
         margin=margin,
-        ratio=1.618,
-        ratio_increment=0.1,
-    ),
-    # This layout cuts piece of screen_rect and places a single window on that piece, and delegates other window placement to other layout
-    layout.Slice(match=None, side="left", width=256),
-    # A mathematical layout, Renders windows in a spiral form by splitting the screen based on a selected ratio.
-    layout.Spiral(
-        border_focus=colors[4],
-        border_normal=colors[20],
-        border_width=border_width,
-        clockwise=True,
-        main_pane="left",
-        main_pane_ratio=None,
-        margin=0,
-        new_client_position="top",
-        ratio=0.6180469715698392,
-        ratio_increment=0.1,
     ),
     # A layout composed of stacks of windows
     layout.Stack(
         autosplit=False,
-        border_focus=colors[4],
-        border_normal=colors[20],
+        border_focus=colors[9],
+        border_normal=colors[0],
         border_width=border_width,
         fair=False,
         margin=margin,
@@ -436,8 +403,8 @@ layouts = [
     layout.Tile(
         add_after_last=False,
         add_on_top=True,
-        border_focus=colors[4],
-        border_normal=colors[20],
+        border_focus=colors[9],
+        border_normal=colors[0],
         border_on_single=False,
         border_width=border_width,
         expand=True,
@@ -451,61 +418,16 @@ layouts = [
         ratio_increment=0.05,
         shift_windows=False,
     ),
-    # This layout works just like Max but displays tree of the windows at the left border of the screen_rect, which allows you to overview all opened windows.
-    layout.TreeTab(
-        active_bg=colors[4],
-        active_fg=colors[20],
-        bg_color=colors[20],
-        border_width=border_width,
-        font=font_name,
-        fontshadow=None,
-        fontsize=14,
-        inactive_bg=colors[20],
-        inactive_fg=colors[19],
-        level_shift=0,
-        margin_left=0,
-        margin_y=0,
-        padding_left=10,
-        padding_x=10,
-        padding_y=10,
-        panel_width=200,
-        place_right=False,
-        previous_on_rm=False,
-        section_bottom=0,
-        section_fg=colors[3],
-        section_fontsize=14,
-        section_left=10,
-        section_padding=10,
-        section_top=10,
-        sections=["Default"],
-        urgent_bg=colors[20],
-        urgent_fg=colors[19],
-        vspace=5,
-    ),
-    # Tiling layout that works nice on vertically mounted monitors
-    layout.VerticalTile(
-        border_focus=colors[4],
-        border_normal=colors[20],
-        border_width=border_width,
-        margin=margin,
-    ),
-    # A layout with single active windows, and few other previews at the right
-    layout.Zoomy(
-        columnwidth=300,
-        margin=margin,
-        property_big="1.0",
-        property_name="ZOOM",
-        property_small="0.1",
-    ),
     # Floating layout, which does nothing with windows but handles focus order
     layout.Floating(
-        border_focus=colors[4],
-        border_normal=colors[20],
+        border_focus=colors[9],
+        border_normal=colors[0],
         border_width=border_width,
         fullscreen_border_width=0,
         max_border_width=0,
     ),
 ]
+
 # }}}
 # Widgets {{{
 
@@ -524,47 +446,47 @@ class CustomClock(widget.Clock):
         )
         self.format = self.format_options[self.current_format_index]
 
-# Default settings for bar widgets.
+
 widget_defaults = dict(
     font=font_name,
     fontsize=14,
     padding=10,
-    background=colors[20],
-    foreground=colors[20],
+    background=colors[0],
+    foreground=colors[0],
 )
 
 current_layout_icon = widget.CurrentLayoutIcon(
     scale=0.5,
-    background=colors[4],
+    background=colors[9],
 )
 group_box = widget.GroupBox(
     fontsize=20,
     borderwidth=0,
     disable_drag=True,
-    active=colors[7],
-    inactive=colors[7],
+    active=colors[5],
+    inactive=colors[5],
     hide_unused=True,
     highlight_method="block",
-    highlight_color=colors[1],
-    this_current_screen_border=colors[4],
-    this_screen_border=colors[20],
+    highlight_color=colors[15],
+    this_current_screen_border=colors[9],
+    this_screen_border=colors[0],
     urgent_alert_method="line",
-    urgent_border=colors[5],
-    urgent_text=colors[7],
+    urgent_border=colors[15],
+    urgent_text=colors[5],
     use_mouse_wheel=True,
 )
 windowname_icon = widget.TextBox(
     text="",
     fontsize=20,
-    background=colors[4],
+    background=colors[9],
 )
 windowname = widget.WindowName(
-    foreground=colors[4],
+    foreground=colors[9],
 )
 volume_icon = widget.TextBox(
     text="󰕾",
     fontsize=20,
-    background=colors[3],
+    background=colors[14],
 )
 volume = widget.Volume(
     mouse_callbacks={
@@ -572,44 +494,57 @@ volume = widget.Volume(
         "Button3": lazy.spawn(volume + " --dec"),
     },
     get_volume_command="pactl get-sink-volume alsa_output.pci-0000_00_1f.3.analog-stereo ",
-    foreground=colors[3],
+    foreground=colors[14],
 )
-memory_icon = widget.TextBox(
-    text="",
+check_updates_icon = widget.TextBox(
+    text="󰚰",
     fontsize=20,
-    background=colors[2],
+    background=colors[7],
 )
-memory = widget.Memory(
-    format="{MemUsed:.0f}{mm}/{MemTotal:.0f}{mm}",
-    measure_mem="G",
-    foreground=colors[2],
+check_updates = widget.CheckUpdates(
+    distro="Arch_paru",
+    display_format="{updates}",
+    no_update_string="0",
+    execute="st -e paru -Syu",
+    colour_have_updates=colors[7],
+    colour_no_updates=colors[7],
 )
 net_icon = widget.TextBox(
     text="󰑩",
     fontsize=20,
-    background=colors[6],
+    background=colors[8],
 )
 net = widget.Net(
     interface="enp0s31f6",
     format="{down:.0f} {down_suffix:<0}/{up:.0f} {up_suffix:<0}",
     update_interval=5,
     use_bits=True,
-    foreground=colors[6],
+    foreground=colors[8],
+)
+memory_icon = widget.TextBox(
+    text="",
+    fontsize=20,
+    background=colors[9],
+)
+memory = widget.Memory(
+    format="{MemUsed:.0f}{mm}/{MemTotal:.0f}{mm}",
+    measure_mem="G",
+    foreground=colors[9],
 )
 cpu_icon = widget.TextBox(
     text="󰍛",
     fontsize=20,
-    background=colors[4],
+    background=colors[10],
 )
 cpu = widget.CPU(
     format="{load_percent:.0f}%",
     update_interval=5,
-    foreground=colors[4],
+    foreground=colors[10],
 )
 tray_icon = widget.TextBox(
     text="",
     fontsize=20,
-    background=colors[5],
+    background=colors[15],
 )
 tray = widget.Systray(
     padding=5,
@@ -618,17 +553,23 @@ tray = widget.Systray(
 clock_icon = widget.TextBox(
     text="",
     fontsize=20,
-    background=colors[1],
+    background=colors[11],
 )
 clock = CustomClock(
-    foreground=colors[1],
+    foreground=colors[11],
 )
 
 # }}}
 # Extensions {{{
 
-# Same as `widget_defaults`, Default settings for extensions.
-extension_defaults = widget_defaults.copy()
+extension_defaults = dict(
+    dmenu_prompt="󰜎 ",
+    font=font_name,
+    background=colors[0],
+    foreground=colors[5],
+    selected_background=colors[9],
+    selected_foreground=colors[0],
+)
 
 # }}}
 # Screens {{{
@@ -645,10 +586,12 @@ screens = [
                 windowname,
                 volume_icon,
                 volume,
-                memory_icon,
-                memory,
+                check_updates_icon,
+                check_updates,
                 net_icon,
                 net,
+                memory_icon,
+                memory,
                 cpu_icon,
                 cpu,
                 tray_icon,
@@ -658,7 +601,7 @@ screens = [
                 clock,
             ],
             size=28,
-            background=colors[20],
+            background=colors[0],
             margin=[10, 10, 5, 10],
             opacity=1,
         ),
@@ -693,8 +636,8 @@ dgroups_app_rules = []  # type: list
 
 # The default floating layout to use. This allows you to set custom floating rules among other things if you wish.
 floating_layout = layout.Floating(
-    border_focus=colors[4],
-    border_normal=colors[20],
+    border_focus=colors[9],
+    border_normal=colors[0],
     border_width=border_width,
     float_rules=[
         # Run the utility of `xprop` to see the wm class and name of an X client.
