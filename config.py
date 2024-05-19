@@ -13,6 +13,7 @@ home = path.expanduser("~")
 autostart_sh = home + "/.config/qtile/scripts/qtile_autostart"
 color_picker = home + "/.config/qtile/scripts/qtile_colorpicker"
 network_manager = home + "/.config/qtile/scripts/networkmanager"
+websearch = home + "/.config/qtile/scripts/websearch"
 volume = home + "/.config/qtile/scripts/qtile_volume"
 screenshot = home + "/.config/qtile/scripts/qtile_screenshot"
 file_manager = "nemo"
@@ -71,24 +72,24 @@ modifier_keys = {
 }
 
 keys = [
-    # Terminal --
-    Key("M-<Return>", lazy.spawn(terminal), desc="Launch terminal"),
-    # GUI Apps --
-    Key("M-a", lazy.spawn(android_studio), desc="Launch Android Studio"),
-    Key("M-w", lazy.spawn(web_browser), desc="Launch web browser"),
-    Key("M-k", lazy.spawn(password_manager), desc="Launch password manager"),
-    Key("M-t", lazy.spawn(telegram), desc="Launch telegram"),
-    Key("M-d", lazy.spawn(discord), desc="Launch discord"),
-    Key("M-S-f", lazy.spawn(file_manager), desc="Launch file manager"),
+    # Apps --
+    Key("M-<Return>", lazy.spawn(terminal), desc="Terminal"),
+    Key("M-a", lazy.spawn(android_studio), desc="Android Studio"),
+    Key("M-w", lazy.spawn(web_browser), desc="Web Browser"),
+    Key("M-m", lazy.spawn(music_player), desc="Music Player"),
+    Key("M-k", lazy.spawn(password_manager), desc="Password Manager"),
+    Key("M-t", lazy.spawn(telegram), desc="Telegram"),
+    Key("M-d", lazy.spawn(discord), desc="Discord"),
+    Key("M-S-f", lazy.spawn(file_manager), desc="File Manager"),
     # Rofi Applets --
     Key("M-r", lazy.spawn(rofi_applets + "rofi_asroot"), desc="Run asroot applet"),
-    Key("M-s", lazy.spawn(rofi_applets + "rofi_screenshot"), desc="Run screenshot applet"),
+    Key("A-s", lazy.spawn(rofi_applets + "rofi_screenshot"), desc="Run screenshot applet"),
     # Dmenu Applets --
     Key(
         "A-<F1>",
         lazy.run_extension(
             extension.J4DmenuDesktop(
-                dmenu_prompt="Apps",
+                dmenu_prompt="Apps ",
                 dmenu_command="dmenu -vi -c -bw 2",
                 dmenu_ignorecase=True,
                 dmenu_lines=10,
@@ -146,6 +147,11 @@ keys = [
             )
         ),
         desc="Network Manager",
+    ),
+    Key(
+        "M-s",
+        lazy.spawn(websearch),
+        desc="Web Search",
     ),
     # Function keys : Volume --
     Key("<XF86AudioRaiseVolume>", lazy.spawn(volume + " --inc"), desc="Raise speaker volume"),
