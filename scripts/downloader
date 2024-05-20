@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# Ask the user for a URL to download
+url=$(dmenu -vi -c -bw 2 -l 1 -p "Download " -nb "#2E3440" -nf "#E5E9F0" -sb "#81A1C1" -sf "#2E3440" -fn "JetBrainsMono Nerd Font Mono-14")
+
+# Exit the script if the URL is empty
+if [ -z "$url" ]; then
+  exit 0
+fi
+
+# Specify the directory to save downloaded files
+dir="Films/Films"
+
+# Start the download
+aria2c -d "$dir" "$url" &

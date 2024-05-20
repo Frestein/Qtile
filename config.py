@@ -1,11 +1,14 @@
 # vim:fileencoding=utf-8:foldmethod=marker
-from libqtile.config import EzKey as Key, EzKeyChord as KeyChord
-from libqtile.config import EzClick as Click, EzDrag as Drag
+from os import environ, path
+from subprocess import Popen
+
+from libqtile import bar, extension, hook, layout, qtile, widget
+from libqtile.config import EzClick as Click
+from libqtile.config import EzDrag as Drag
+from libqtile.config import EzKey as Key
+from libqtile.config import EzKeyChord as KeyChord
 from libqtile.config import Group, Match, Screen
 from libqtile.lazy import lazy
-from libqtile import qtile, bar, widget, extension, layout, hook
-from os import path, environ
-from subprocess import Popen
 
 # App/Script Variables {{{
 
@@ -14,6 +17,7 @@ autostart_sh = home + "/.config/qtile/scripts/qtile_autostart"
 color_picker = home + "/.config/qtile/scripts/qtile_colorpicker"
 network_manager = home + "/.config/qtile/scripts/networkmanager"
 websearch = home + "/.config/qtile/scripts/websearch"
+download = home + "/.config/qtile/scripts/downloader"
 volume = home + "/.config/qtile/scripts/qtile_volume"
 screenshot = home + "/.config/qtile/scripts/qtile_screenshot"
 file_manager = "nemo"
@@ -103,7 +107,7 @@ keys = [
             extension.CommandSet(
                 dmenu_prompt="Session",
                 commands={
-                    "Lock": 'betterlockscreen --lock --time-format %H:%M"',
+                    "Lock": 'betterlockscreen --lock --time-format %H:%M',
                     "Logout": "qtile cmd-obj -o cmd -f shutdown",
                     "Reload": "qtile cmd-obj -o cmd -f restart",
                     "Reboot": "systemctl reboot",
@@ -151,6 +155,11 @@ keys = [
     Key(
         "M-s",
         lazy.spawn(websearch),
+        desc="Web Search",
+    ),
+    Key(
+        "A-d",
+        lazy.spawn(download),
         desc="Web Search",
     ),
     # Function keys : Volume --
