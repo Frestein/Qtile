@@ -274,13 +274,13 @@ groups = [
         matches=[
             Match(wm_class="kitty"),
         ],
+        layout="tile",
         label="",
     ),
     Group(
         name="2",
         matches=[
             Match(wm_class="jetbrains-studio"),
-            Match(wm_class="jetbrains-pycharm"),
             Match(wm_class="jetbrains-toolbox", title="JetBrains Toolbox"),
         ],
         label="",
@@ -363,7 +363,7 @@ for i in groups:
 # Layout/Widget Variables {{{
 
 border_width = 2
-margin = [5, 10, 10, 10]
+margin = 5
 gap = [45, 5, 5, 5]
 
 # }}}
@@ -397,7 +397,7 @@ layouts = [
         grow_amount=10,
         lower_right=True,
         margin=margin,
-        margin_on_single=None,
+        margin_on_single=margin,
         ratio=1.6,
         wrap_clients=False,
     ),
@@ -631,6 +631,9 @@ screens = [
             margin=[10, 10, 5, 10],
             opacity=1,
         ),
+        left=bar.Gap(5),
+        right=bar.Gap(5),
+        bottom=bar.Gap(5),
         # Set static wallpaper.
         wallpaper=home + "/.config/qtile/theme/wallpaper",
         # Set wallpaper mode to "fill" or "stretch".
@@ -647,7 +650,7 @@ auto_fullscreen = True
 
 # When clicked, should the window be brought to the front or not.
 # If this is set to "floating_only", only floating windows will get affected (This sets the X Stack Mode to Above.)
-bring_front_click = False
+bring_front_click = "floating_only"
 
 # If true, the cursor follows the focus as directed by the keyboard, warping to the center of the focused window.
 # When switching focus between screens, If there are no windows in the screen, the cursor will warp to the center of the screen.
@@ -659,24 +662,6 @@ dgroups_key_binder = None
 
 # A list of Rule objects which can send windows to various groups based on matching criteria.
 dgroups_app_rules = []  # type: list
-
-# The default floating layout to use. This allows you to set custom floating rules among other things if you wish.
-floating_layout = layout.Floating(
-    border_focus=colors[9],
-    border_normal=colors[0],
-    border_width=border_width,
-    float_rules=[
-        # Run the utility of `xprop` to see the wm class and name of an X client.
-        *layout.Floating.default_float_rules,
-        Match(wm_class="alacritty-float|Music"),
-        Match(wm_class="Lxappearance|Nitrogen"),
-        Match(wm_class="Pavucontrol|Xfce4-power-manager-settings|Nm-connection-editor"),
-        Match(wm_class="feh|Viewnior|Gpicview|Gimp|MPlayer|Vlc|Spotify"),
-        Match(wm_class="Kvantum Manager|qt5ct"),
-        Match(wm_class="VirtualBox Manager|qemu|Qemu-system-x86_64"),
-        Match(title="branchdialog"),
-    ],
-)
 
 # Behavior of the _NET_ACTIVATE_WINDOW message sent by applications
 #
