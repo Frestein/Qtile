@@ -300,6 +300,7 @@ groups = [
             Match(wm_class="Nemo"),
             Match(wm_class="thunderbird"),
         ],
+        layout="tile",
         label="",
     ),
     Group(
@@ -657,6 +658,13 @@ dgroups_key_binder = None
 
 # A list of Rule objects which can send windows to various groups based on matching criteria.
 dgroups_app_rules = []  # type: list
+
+# The default floating layout to use. This allows you to set custom floating rules among other things if you wish.
+floating_layout = layout.Floating(
+    border_focus=colors[9],
+    border_normal=colors[0],
+    border_width=border_width,
+)
 
 # Behavior of the _NET_ACTIVATE_WINDOW message sent by applications
 #
