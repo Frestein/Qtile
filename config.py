@@ -10,7 +10,7 @@ from libqtile.config import EzKeyChord as KeyChord
 from libqtile.config import Group, Match, Screen
 from libqtile.lazy import lazy
 
-# App/Script Variables {{{
+# Variables {{{
 
 home = path.expanduser("~")
 autostart_sh = home + "/.config/qtile/scripts/qtile_autostart"
@@ -32,6 +32,8 @@ rofi_applets = home + "/.config/qtile/scripts/"
 notify_cmd = "dunstify -u low -h string:x-dunst-stack-tag:qtileconfig"
 
 font_name = "JetBrains Mono Nerd Font Mono"
+border_width = 2
+margin = 5
 colors = [
     "#2E3440",  # 0
     "#3B4252",  # 1
@@ -358,13 +360,6 @@ for i in groups:
             ),
         ]
     )
-
-# }}}
-# Layout/Widget Variables {{{
-
-border_width = 2
-margin = 5
-gap = [45, 5, 5, 5]
 
 # }}}
 # Layouts {{{
