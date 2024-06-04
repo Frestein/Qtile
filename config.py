@@ -578,6 +578,7 @@ clock_icon = widget.TextBox(
     background=colors[11],
 )
 clock = CustomClock(
+    format="%I:%M",
     foreground=colors[11],
 )
 
