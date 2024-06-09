@@ -7,3 +7,6 @@
 [submodule "dmenu"]
 	path = dmenu
 	url = https://github.com/Frestein/dmenu
+[submodule "kitty"]
+	path = kitty
+	url = https://github.com/Frestein/kitty
