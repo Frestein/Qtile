@@ -555,7 +555,6 @@ net = widget.Net(
     interface="enp0s31f6",
     format="{down:.0f} {down_suffix:<0}/{up:.0f} {up_suffix:<0}",
     update_interval=5,
-    use_bits=True,
     foreground=colors[8],
 )
 memory_icon = widget.TextBox(
