@@ -151,6 +151,7 @@ keys = [
     Key(
         "M-s",
         lazy.spawn(websearch),
+        lazy.group["3"].toscreen(),
         desc="Web Search",
     ),
     Key(
