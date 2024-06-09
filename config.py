@@ -490,6 +490,17 @@ group_box = widget.GroupBox(
     urgent_text=colors[5],
     use_mouse_wheel=True,
 )
+cmus_icon = widget.TextBox(
+    text="",
+    fontsize=20,
+    background=colors[13],
+)
+cmus = widget.Cmus(
+    format="{artist} — {title}",
+    noplay_color=colors[13],
+    play_color=colors[13],
+    foreground=colors[13],
+)
 windowname_icon = widget.TextBox(
     text="",
     fontsize=20,
@@ -610,6 +621,8 @@ screens = [
                 group_box,
                 windowname_icon,
                 windowname,
+                cmus_icon,
+                cmus,
                 volume_icon,
                 volume,
                 check_updates_icon,
