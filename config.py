@@ -2,12 +2,13 @@
 from os import environ, path
 from subprocess import Popen
 
-from libqtile import bar, extension, hook, layout, qtile, widget
+from libqtile import bar, extension, hook, qtile, widget
+from libqtile.config import DropDown, Group, Match, ScratchPad, Screen
 from libqtile.config import EzClick as Click
 from libqtile.config import EzDrag as Drag
 from libqtile.config import EzKey as Key
 from libqtile.config import EzKeyChord as KeyChord
-from libqtile.config import Group, Match, Screen
+from libqtile.layout import Bsp, Columns, Floating, Max, Stack, Tile
 from libqtile.lazy import lazy
 
 # Variables {{{
@@ -367,7 +368,7 @@ for i in groups:
 
 layouts = [
     # Extension of the Stack layout
-    layout.Columns(
+    Columns(
         border_focus=colors[9],
         border_normal=colors[0],
         border_on_single=False,
@@ -384,7 +385,7 @@ layouts = [
         wrap_focus_stacks=True,
     ),
     # Layout inspired by bspwm
-    layout.Bsp(
+    Bsp(
         border_focus=colors[9],
         border_normal=colors[0],
         border_on_single=False,
@@ -398,14 +399,14 @@ layouts = [
         wrap_clients=False,
     ),
     # Maximized layout
-    layout.Max(
+    Max(
         border_focus=colors[9],
         border_normal=colors[0],
         border_width=border_width,
         margin=margin,
     ),
     # A layout composed of stacks of windows
-    layout.Stack(
+    Stack(
         autosplit=False,
         border_focus=colors[9],
         border_normal=colors[0],
@@ -415,7 +416,7 @@ layouts = [
         num_stacks=2,
     ),
     # A layout with two stacks of windows dividing the screen
-    layout.Tile(
+    Tile(
         add_after_last=False,
         add_on_top=True,
         border_focus=colors[9],
@@ -434,7 +435,7 @@ layouts = [
         shift_windows=False,
     ),
     # Floating layout, which does nothing with windows but handles focus order
-    layout.Floating(
+    Floating(
         border_focus=colors[9],
         border_normal=colors[0],
         border_width=border_width,
@@ -677,7 +678,7 @@ dgroups_key_binder = None
 dgroups_app_rules = []  # type: list
 
 # The default floating layout to use. This allows you to set custom floating rules among other things if you wish.
-floating_layout = layout.Floating(
+floating_layout = Floating(
     border_focus=colors[9],
     border_normal=colors[0],
     border_width=border_width,
