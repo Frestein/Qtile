@@ -9,7 +9,7 @@ if [ -z "$url" ]; then
 fi
 
 # Specify the directory to save downloaded files
-dir="Films/Films"
+dir="Films/"
 
 # Start the download
-aria2c -d "$dir" "$url" &
+aria2c --seed-time 0 -d "$dir" "$url" &
