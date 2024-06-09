@@ -29,10 +29,5 @@ xsetroot -cursor_name left_ptr
 ## Mount Google Drive
 exec rclone mount --daemon GoogleDriveMain: ~/Google\ Drive &
 
-## Launch JetBrains Toolbox
-if ! pgrep -x jetbrains-toolbox >/dev/null; then
-  exec jetbrains-toolbox --minimize &
-fi
-
 ## Launch jamesdsp
 exec jamesdsp -t &
