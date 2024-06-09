@@ -520,13 +520,16 @@ check_updates = widget.CheckUpdates(
     distro="Arch_paru",
     display_format="{updates}",
     no_update_string="0",
-    execute="st -e paru -Syu",
+    mouse_callbacks={
+        "Button1": lazy.group["scratchpad"].dropdown_toggle("Upgrade"),
+        "Button3": "paru -Qu",
+    },
     colour_have_updates=colors[7],
     colour_no_updates=colors[7],
 )
 net_icon = widget.TextBox(
-    text="󰑩",
-    fontsize=20,
+    text="",
+    fontsize=22,
     background=colors[8],
 )
 net = widget.Net(
