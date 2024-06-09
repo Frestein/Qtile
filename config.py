@@ -519,7 +519,7 @@ volume = widget.Volume(
         "Button1": lazy.spawn(volume + " --inc"),
         "Button3": lazy.spawn(volume + " --dec"),
     },
-    get_volume_command="pactl get-sink-volume alsa_output.pci-0000_00_1f.3.analog-stereo ",
+    get_volume_command="pactl get-sink-volume alsa_output.pci-0000_00_1f.3.analog-stereo",
     foreground=colors[14],
 )
 check_updates_icon = widget.TextBox(
