@@ -22,12 +22,12 @@ download = home + "/.config/qtile/scripts/downloader"
 volume = home + "/.config/qtile/scripts/qtile_volume"
 screenshot = home + "/.config/qtile/scripts/qtile_screenshot"
 file_manager = "nemo"
+tui_file_manager = home + "/.cargo/bin/yazi"
 web_browser = "firefox"
-terminal = "kitty --session=session.conf"
-android_studio = home + "/.config/qtile/scripts/studio.sh"
-discord = "webcord"
+terminal_session = "kitty --session=session.conf"
+terminal = "st"
+android_studio = "android-studio"
 telegram = "telegram-desktop"
-music_player = "muffon"
 password_manager = "keepassxc"
 rofi_applets = home + "/.config/qtile/scripts/"
 notify_cmd = "dunstify -u low -h string:x-dunst-stack-tag:qtileconfig"
@@ -73,16 +73,22 @@ def autostart():
 
 keys = [
     # Apps --
+    KeyChord(
+        "M-l",
+        [
+            Key("w", lazy.spawn(web_browser), desc="Web browser"),
+            Key("a", lazy.spawn(android_studio), desc="Android Studio"),
+            Key("j", lazy.spawn("jetbrains-toolbox"), desc="JetBrains Toolbox"),
+            Key("t", lazy.spawn(telegram), desc="Telegram"),
+            Key("f", lazy.spawn(file_manager), desc="File manager"),
+            Key("k", lazy.spawn(password_manager), desc="Password manager"),
+        ],
+        name="Launch",
+    ),
+    Key("M-k", lazy.spawn(terminal_session), desc="Terminal session"),
     Key("M-<Return>", lazy.spawn(terminal), desc="Terminal"),
-    Key("M-a", lazy.spawn(android_studio), desc="Android Studio"),
-    Key("M-w", lazy.spawn(web_browser), desc="Web Browser"),
-    Key("M-m", lazy.spawn(music_player), desc="Music Player"),
-    Key("M-k", lazy.spawn(password_manager), desc="Password Manager"),
-    Key("M-t", lazy.spawn(telegram), desc="Telegram"),
-    Key("M-d", lazy.spawn(discord), desc="Discord"),
-    Key("M-S-f", lazy.spawn(file_manager), desc="File Manager"),
     # Rofi Applets --
-    Key("M-r", lazy.spawn(rofi_applets + "rofi_asroot"), desc="Run asroot applet"),
+    Key("A-r", lazy.spawn(rofi_applets + "rofi_asroot"), desc="Run asroot applet"),
     Key("A-s", lazy.spawn(rofi_applets + "rofi_screenshot"), desc="Run screenshot applet"),
     # Dmenu Applets --
     Key(
@@ -128,7 +134,7 @@ keys = [
         desc="Window List",
     ),
     Key(
-        "A-r",
+        "M-r",
         lazy.run_extension(
             extension.DmenuRun(
                 dmenu_prompt="󰜎 ",
@@ -183,6 +189,7 @@ keys = [
     # Control Qtile
     Key("M-C-r", lazy.reload_config(), lazy.spawn(notify_cmd + ' "Configuration Reloaded!"'), desc="Reload the config"),
     Key("M-C-s", lazy.restart(), lazy.spawn(notify_cmd + ' "Restarting Qtile..."'), desc="Restart Qtile"),
+    Key("M-C-q", lazy.shutdown(), lazy.spawn(notify_cmd + ' "Exiting Qtile..."'), desc="Shutdown Qtile"),
     # Switch between windows
     Key("M-<Left>", lazy.layout.left(), desc="Move focus to left"),
     Key("M-<Right>", lazy.layout.right(), desc="Move focus to right"),
@@ -208,7 +215,7 @@ keys = [
     Key("C-A-<bracketright>", lazy.screen.next_group(skip_empty=1), desc="Move to the group on the right"),
     Key("C-A-<bracketleft>", lazy.screen.prev_group(skip_empty=1), desc="Move to the group on the left"),
     # Back-n-forth groups
-    Key("M-b", lazy.screen.toggle_group(), desc="Move to the last visited group"),
+    Key("A-<Tab>", lazy.screen.toggle_group(), desc="Move to the last visited group"),
     # Change focus to other window
     Key("M-<Tab>", lazy.layout.next(), desc="Move window focus to other window"),
     # Toggle between different layouts as defined below
