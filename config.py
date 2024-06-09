@@ -284,7 +284,7 @@ groups = [
         name="2",
         matches=[
             Match(wm_class="jetbrains-studio"),
-            Match(wm_class="jetbrains-toolbox", title="JetBrains Toolbox"),
+            Match(title="JetBrains Toolbox"),
         ],
         label="",
     ),
@@ -339,7 +339,7 @@ groups = [
         name="9",
         matches=[
             Match(wm_class="steam"),
-            Match(wm_class="yad_v13_0"),
+            Match(wm_class="lutris"),
         ],
         label="",
     ),
