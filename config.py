@@ -668,6 +668,11 @@ floating_layout = layout.Floating(
     border_focus=colors[9],
     border_normal=colors[0],
     border_width=border_width,
+    float_rules=[
+        # Run the utility of `xprop` to see the wm class and name of an X client.
+        *Floating.default_float_rules,
+        Match(wm_class="firefox", title="Library"),
+    ],
 )
 
 # Behavior of the _NET_ACTIVATE_WINDOW message sent by applications
