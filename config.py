@@ -71,13 +71,6 @@ def autostart():
 # }}}
 # Key Bindings {{{
 
-modifier_keys = {
-    "M": "mod4",
-    "A": "mod1",
-    "S": "shift",
-    "C": "control",
-}
-
 keys = [
     # Apps --
     Key("M-<Return>", lazy.spawn(terminal), desc="Terminal"),
