@@ -1,3 +1,6 @@
 [submodule "st"]
 	path = st
 	url = https://github.com/Frestein/st
+[submodule "nsxiv"]
+	path = nsxiv
+	url = https://github.com/Frestein/nsxiv
