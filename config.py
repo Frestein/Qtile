@@ -87,6 +87,10 @@ keys = [
     ),
     Key("M-k", lazy.spawn(terminal_session), desc="Terminal session"),
     Key("M-<Return>", lazy.spawn(terminal), desc="Terminal"),
+    Key("M-t", lazy.group["scratchpad"].dropdown_toggle("Terminal"), desc="Dropdown terminal"),
+    Key("M-u", lazy.group["scratchpad"].dropdown_toggle("Upgrade system"), desc="Upgrade system"),
+    Key("M-m", lazy.group["scratchpad"].dropdown_toggle("Music player"), desc="Music player"),
+    Key("M-S-f", lazy.group["scratchpad"].dropdown_toggle("File manager"), desc="File manager"),
     # Rofi Applets --
     Key("A-r", lazy.spawn(rofi_applets + "rofi_asroot"), desc="Run asroot applet"),
     Key("A-s", lazy.spawn(rofi_applets + "rofi_screenshot"), desc="Run screenshot applet"),
@@ -273,6 +277,47 @@ def auto_switch(window):
 
 
 groups = [
+    ScratchPad(
+        name="scratchpad",
+        dropdowns=[
+            DropDown(
+                "Terminal",
+                terminal,
+                x=0.25,
+                y=0.25,
+                width=0.5,
+                height=0.5,
+                opacity=1.0,
+            ),
+            DropDown(
+                "Upgrade system",
+                terminal + " -e paru -Syu",
+                x=0.25,
+                y=0.25,
+                width=0.5,
+                height=0.5,
+                opacity=1.0,
+            ),
+            DropDown(
+                "Music player",
+                terminal + " -e cmus",
+                x=0.25,
+                y=0.25,
+                width=0.5,
+                height=0.5,
+                opacity=1.0,
+            ),
+            DropDown(
+                "File manager",
+                terminal + " -e " + tui_file_manager,
+                x=0.25,
+                y=0.25,
+                width=0.5,
+                height=0.5,
+                opacity=1.0,
+            ),
+        ],
+    ),
     Group(
         name="1",
         matches=[
@@ -347,22 +392,23 @@ groups = [
 ]
 
 for i in groups:
-    keys.extend(
-        [
-            # mod + number of group = switch to group
-            Key(
-                "M-" + i.name,
-                lazy.group[i.name].toscreen(),
-                desc="Switch to group {}".format(i.name),
-            ),
-            # mod + shift + number of group = switch to & move focused window to group
-            Key(
-                "M-S-" + i.name,
-                lazy.window.togroup(i.name, switch_group=True),
-                desc="Switch to & move focused window to group {}".format(i.name),
-            ),
-        ]
-    )
+    if not isinstance(i, ScratchPad):
+        keys.extend(
+            [
+                # mod + number of group = switch to group
+                Key(
+                    "M-" + i.name,
+                    lazy.group[i.name].toscreen(),
+                    desc="Switch to group {}".format(i.name),
+                ),
+                # mod + shift + number of group = switch to & move focused window to group
+                Key(
+                    "M-S-" + i.name,
+                    lazy.window.togroup(i.name, switch_group=True),
+                    desc="Switch to & move focused window to group {}".format(i.name),
+                ),
+            ]
+        )
 
 # }}}
 # Layouts {{{
