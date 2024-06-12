@@ -1,12 +1,12 @@
 [submodule "st"]
 	path = st
-	url = https://github.com/Frestein/st
+	url = https://codeberg.org/Frestein/st
 [submodule "nsxiv"]
 	path = nsxiv
-	url = https://github.com/Frestein/nsxiv
+	url = https://codeberg.org/Frestein/nsxiv
 [submodule "dmenu"]
 	path = dmenu
-	url = https://github.com/Frestein/dmenu
+	url = https://codeberg.org/Frestein/dmenu
 [submodule "kitty"]
 	path = kitty
-	url = https://github.com/Frestein/kitty
+	url = https://codeberg.org/Frestein/kitty
