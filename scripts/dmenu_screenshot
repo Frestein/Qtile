@@ -113,9 +113,9 @@ EOF
   {
     #-------[ action - Bordered ]-------#
     {
-      config_action_bordered_line_color="LightGray"
+      config_action_bordered_line_color="#81A1C1"
       config_action_bordered_line_thickness=2
-      config_action_bordered_corner_radius=7
+      config_action_bordered_corner_radius=1
     }
   }
 
