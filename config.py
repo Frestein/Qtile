@@ -105,7 +105,7 @@ keys = [
                 dmenu_lines=10,
             )
         ),
-        desc="Application Launcher",
+        desc="Application launcher applet",
     ),
     Key(
         "A-q",
@@ -123,7 +123,7 @@ keys = [
                 dmenu_lines=10,
             )
         ),
-        desc="Session Manager",
+        desc="Session manager applet",
     ),
     Key(
         "A-w",
@@ -135,7 +135,7 @@ keys = [
                 dmenu_lines=10,
             )
         ),
-        desc="Window List",
+        desc="Window list applet",
     ),
     Key(
         "M-r",
@@ -147,7 +147,7 @@ keys = [
                 dmenu_lines=10,
             )
         ),
-        desc="Runner",
+        desc="Runner applet",
     ),
     Key(
         "A-n",
@@ -156,18 +156,18 @@ keys = [
                 dmenu_command=network_manager,
             )
         ),
-        desc="Network Manager",
+        desc="Network manager applet",
     ),
     Key(
         "M-s",
         lazy.spawn(websearch),
         lazy.group["3"].toscreen(),
-        desc="Web Search",
+        desc="Web search applet",
     ),
     Key(
         "A-d",
         lazy.spawn(download),
-        desc="Web Search",
+        desc="Downloader applet",
     ),
     # Function keys : Volume --
     Key("<XF86AudioRaiseVolume>", lazy.spawn(volume + " --inc"), desc="Raise speaker volume"),
