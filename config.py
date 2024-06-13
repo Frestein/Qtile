@@ -648,7 +648,7 @@ clock = CustomClock(
 
 extension_defaults = dict(
     font=font_name,
-    fontsize=14,
+    fontsize=16,
     background=colors[0],
     foreground=colors[5],
     selected_background=colors[9],
