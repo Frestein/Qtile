@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
 # Icons
 iDIR='/usr/share/archcraft/icons/dunst'

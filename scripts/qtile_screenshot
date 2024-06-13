@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
 # file
 time=$(date +%Y-%m-%d-%H-%M-%S)

@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
 # qtile dir
 qdir="$HOME/.config/qtile"

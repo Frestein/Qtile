@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
 color=$(xcolor --format hex --preview-size 255 --scale 10)
 image=/tmp/${color}.png
