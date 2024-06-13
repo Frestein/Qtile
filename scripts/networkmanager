@@ -12,6 +12,7 @@ Add dmenu options and default terminal if desired to
 ~/.config/networkmanager-dmenu/config.ini
 
 """
+
 import configparser
 import locale
 import os
