@@ -80,30 +80,23 @@ dmenu_shot provides a menu with set of custom commands to
 perform some simple automated image manipulation on screenshots
 taken using Flameshot, and then putting them into clipboard.
 
-
 Commands:
     -h, --help    To show this help
 
-
 Menu:
-    Trim:          It just trims the extra spaces around the
-                    selected region.
-    Remove_white:  Useful to remove the white background. It will
-                    replace white with transparent.
-    Negative:      Convert the image to negative colors.
-    Bordered:      Add border around the captured screenshot.
-    Scaled:        Resize the screenshot either by percentage
-                    (e.g 75%) or specific dimention (e.g 200x300).
-    Select_Window: Waits for user to select a window, then take
-                    screenshot of it.
+    Instant:
+      Trim:          It just trims the extra spaces around the
+                     selected region.
+      Select window: Waits for user to select a window, then take
+                     screenshot of it.
+      Remove white:  Useful to remove the white background. It will
+                     replace white with transparent.
+      Bordered:      Add border around the captured screenshot.
+      Scaled:        Resize the screenshot either by percentage
+                     (e.g 75%) or specific dimension (e.g 200x300).
+    Timer:
+      Countdown:     Take a screenshot after a countdown (in seconds).
 
-
-Author:
-    Mehrad Mahmoudian
-
-
-Git repository for bug report and contributions:
-    https://codeberg.org/mehrad/dmenu_shot
 EOF
     exit 0
   fi
