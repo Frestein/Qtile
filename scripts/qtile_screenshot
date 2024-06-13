@@ -85,7 +85,7 @@ shotarea() {
   sleep 0.05
   
   # run flameshot in gui mode in the desired coordinates
-  flameshot screen -p  "$dir/$file" --region "${WIDTH}x${HEIGHT}+${X}+${Y}" -r | copy_shot
+  flameshot gui -p  "$dir/$file" --region "${WIDTH}x${HEIGHT}+${X}+${Y}" -r | copy_shot
   notify_view
 }
 
