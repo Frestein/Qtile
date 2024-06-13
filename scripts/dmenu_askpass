@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+# Dmenu text dialog to get password
+dmenu \
+  -P \
+  -p "Root " \
+  -bw 2
