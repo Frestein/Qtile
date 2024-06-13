@@ -26,7 +26,11 @@ notify_view() {
 
 # copy screenshot to clipboard
 copy_shot() {
-  xclip -selection clipboard -t image/png
+  if [[ -e "$dir/$file" ]]; then
+    tee "$dir/$file" | xclip -selection clipboard -t image/png
+  else
+    echo "Screenshot aborted."
+  fi
 }
 
 # countdown
@@ -39,7 +43,7 @@ countdown() {
 
 # take shots
 shotnow() {
-  flameshot screen -p  "$dir/$file" -r | copy_shot
+  flameshot screen -p "$dir/$file" -r | copy_shot
   notify_view
 }
 
@@ -47,7 +51,7 @@ shot5() {
   countdown 5
   sleep 1
 
-  flameshot screen -p  "$dir/$file" -r | copy_shot
+  flameshot screen -p "$dir/$file" -r | copy_shot
   notify_view
 }
 
@@ -55,7 +59,7 @@ shot10() {
   countdown 10
   sleep 1
 
-  flameshot screen -p  "$dir/$file"  -r | copy_shot
+  flameshot screen -p "$dir/$file" -r | copy_shot
   notify_view
 }
 
@@ -70,12 +74,12 @@ shotwin() {
   sleep 0.05
   
   # run flameshot in gui mode in the desired coordinates
-  flameshot gui -p  "$dir/$file" --region "${WIDTH}x${HEIGHT}+${X}+${Y}" -r | copy_shot
+  flameshot gui -p "$dir/$file" --region "${WIDTH}x${HEIGHT}+${X}+${Y}" -r | copy_shot
   notify_view
 }
 
 shotarea() {
-  flameshot gui -p  "$dir/$file" -r | copy_shot
+  flameshot gui -p "$dir/$file" -r | copy_shot
   notify_view
 }
 

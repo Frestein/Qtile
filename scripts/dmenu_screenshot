@@ -16,7 +16,11 @@
   }
   # copy screenshot to clipboard
   copy_shot() {
-    xclip -selection clipboard -t image/png
+    if [[ -e "$dir/$file" ]]; then
+      tee "$dir/$file" | xclip -selection clipboard -t image/png
+    else
+      echo "Screenshot aborted."
+    fi
   }
   # countdown
   countdown() {
