@@ -16,7 +16,7 @@
   }
   # copy screenshot to clipboard
   copy_shot() {
-    tee "$file" | xclip -selection clipboard -t image/png
+    xclip -selection clipboard -t image/png
   }
   # countdown
   countdown() {
@@ -168,7 +168,7 @@ case $screenshot_type in "Instant")
 
   case $RET in
   Trim)
-    flameshot gui -p "$dir/$file" --raw |
+    flameshot gui -p "$dir/$file" -r |
       magick png:- -trim png:- |
       copy_shot
     notify_view
@@ -190,13 +190,13 @@ case $screenshot_type in "Instant")
     notify_view
     ;;
   "Remove white")
-    flameshot gui -p "$dir/$file" --raw |
+    flameshot gui -p "$dir/$file" -r |
       magick png:- -transparent white -fuzz 90% png:- |
       copy_shot
     notify_view
     ;;
   Bordered)
-    flameshot gui -p "$dir/$file" --raw |
+    flameshot gui -p "$dir/$file" -r |
       magick png:- \
         -format "roundrectangle 4,3 %[fx:w+0],%[fx:h+0] ${config_action_bordered_corner_radius},${config_action_bordered_corner_radius}" \
         -write info:tmp.mvg \
