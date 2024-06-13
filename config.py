@@ -100,7 +100,7 @@ keys = [
         lazy.run_extension(
             extension.J4DmenuDesktop(
                 dmenu_prompt="Apps ",
-                dmenu_command="dmenu -vi -c -bw 2",
+                dmenu_command="dmenu -vi",
                 dmenu_ignorecase=True,
                 dmenu_lines=10,
             )
@@ -119,7 +119,7 @@ keys = [
                     "Reboot": "systemctl reboot",
                     "Shutdown": "systemctl poweroff",
                 },
-                dmenu_command="dmenu -vi -noi -c -bw 2",
+                dmenu_command="dmenu -vi -noi",
                 dmenu_lines=10,
             )
         ),
@@ -131,7 +131,7 @@ keys = [
             extension.WindowList(
                 dmenu_prompt="Windows",
                 item_format="{group}: {window}",
-                dmenu_command="dmenu -vi -noi -c -bw 2",
+                dmenu_command="dmenu -vi -noi",
                 dmenu_lines=10,
             )
         ),
@@ -142,7 +142,7 @@ keys = [
         lazy.run_extension(
             extension.DmenuRun(
                 dmenu_prompt="󰜎 ",
-                dmenu_command="dmenu_run -vi -c -bw 2",
+                dmenu_command="dmenu_run -vi",
                 dmenu_ignorecase=True,
                 dmenu_lines=10,
             )
