@@ -203,13 +203,13 @@ case $screenshot_type in "Instant")
     flameshot gui -p "$dir/$file" -r |
       magick png:- \
         -format "roundrectangle 4,3 %[fx:w+0],%[fx:h+0] ${config_action_bordered_corner_radius},${config_action_bordered_corner_radius}" \
-        -write info:tmp.mvg \
+        -write info:/tmp/tmp.mvg \
         -alpha set -bordercolor "${config_action_bordered_line_color}" -border ${config_action_bordered_line_thickness} \
         \( +clone -alpha transparent -background none \
-        -fill white -stroke none -strokewidth 0 -draw @tmp.mvg \) \
+        -fill white -stroke none -strokewidth 0 -draw @/tmp/tmp.mvg \) \
         -compose DstIn -composite \
         \( +clone -alpha transparent -background none \
-        -fill none -stroke "${config_action_bordered_line_color}" -strokewidth ${config_action_bordered_line_thickness} -draw @tmp.mvg \) \
+        -fill none -stroke "${config_action_bordered_line_color}" -strokewidth ${config_action_bordered_line_thickness} -draw @/tmp/tmp.mvg \) \
         -compose Over -composite png:- |
       copy_shot
     notify_view
