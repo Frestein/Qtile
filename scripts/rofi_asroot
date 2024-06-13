@@ -8,12 +8,12 @@ ASROOT="$DIR/scripts/qtile_asroot"
 # Theme Elements
 prompt='Root'
 mesg="Run Applications As Root"
-term='kitty'
+term='st'
 
 # Options
 layout=$(cat ${RASI} | grep 'USE_ICON' | cut -d'=' -f2)
 if [[ "$layout" == 'NO' ]]; then
-  option_1=" Kitty"
+  option_1=" St"
   option_2=" Nemo"
   option_3=" Yazi"
   option_4=" NeoVim"
@@ -42,13 +42,13 @@ run_rofi() {
 # Execute Command
 run_cmd() {
   if [[ "$1" == '--opt1' ]]; then
-    ${ASROOT} "$term --session=none"
+    ${ASROOT} "$term"
   elif [[ "$1" == '--opt2' ]]; then
     ${ASROOT} 'dbus-run-session nemo'
   elif [[ "$1" == '--opt3' ]]; then
-    ${ASROOT} "$term yazi"
+    ${ASROOT} "$term -e yazi"
   elif [[ "$1" == '--opt4' ]]; then
-    ${ASROOT} "$term nvim"
+    ${ASROOT} "$term -e nvim"
   fi
 }
 
