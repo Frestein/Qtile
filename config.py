@@ -93,7 +93,6 @@ keys = [
     Key("M-S-f", lazy.group["scratchpad"].dropdown_toggle("File manager"), desc="File manager"),
     # Rofi Applets --
     Key("A-r", lazy.spawn(rofi_applets + "rofi_asroot"), desc="Run asroot applet"),
-    Key("A-s", lazy.spawn(rofi_applets + "rofi_screenshot"), desc="Run screenshot applet"),
     # Dmenu Applets --
     Key(
         "A-<F1>",
@@ -148,6 +147,11 @@ keys = [
             )
         ),
         desc="Runner applet",
+    ),
+    Key(
+        "A-s",
+        lazy.spawn(rofi_applets + "dmenu_screenshot"),
+        desc="Screenshot applet",
     ),
     Key(
         "A-n",

@@ -16,11 +16,11 @@ notify_view() {
   notify_cmd_shot='dunstify -u low -h string:x-dunst-stack-tag:obscreenshot -i /usr/share/archcraft/icons/dunst/picture.png'
   ${notify_cmd_shot} "Copied to clipboard."
   paplay /usr/share/sounds/freedesktop/stereo/screen-capture.oga &>/dev/null &
-  nsxiv -b ${dir}/"$file"
+  nsxiv "${dir}/$file"
   if [[ -e "$dir/$file" ]]; then
-    ${notify_cmd_shot} "Screenshot Saved."
+    ${notify_cmd_shot} "Screenshot saved."
   else
-    ${notify_cmd_shot} "Screenshot Deleted."
+    ${notify_cmd_shot} "Screenshot aborted."
   fi
 }
 
@@ -39,29 +39,53 @@ countdown() {
 
 # take shots
 shotnow() {
-  cd ${dir} && maim -u -f png | copy_shot
+  flameshot screen -p  "$dir/$file" -r | copy_shot
   notify_view
 }
 
 shot5() {
-  countdown '5'
-  sleep 1 && cd ${dir} && maim -u -f png | copy_shot
+  countdown 5
+  sleep 1
+
+  flameshot screen -p  "$dir/$file" -r | copy_shot
   notify_view
 }
 
 shot10() {
-  countdown '10'
-  sleep 1 && cd ${dir} && maim -u -f png | copy_shot
+  countdown 10
+  sleep 1
+
+  flameshot screen -p  "$dir/$file"  -r | copy_shot
   notify_view
 }
 
 shotwin() {
-  cd ${dir} && maim -u -f png -i $(xdotool getactivewindow) | copy_shot
+  TMP_WINDOW_ID=$(xdotool getactivewindow)
+      
+  unset WINDOW X Y WIDTH HEIGHT SCREEN
+  eval $(xdotool getwindowgeometry --shell "${TMP_WINDOW_ID}")
+  
+  # Put the window in focus
+  xdotool windowfocus --sync "${TMP_WINDOW_ID}"
+  sleep 0.05
+  
+  # run flameshot in gui mode in the desired coordinates
+  flameshot screen -p  "$dir/$file" --region "${WIDTH}x${HEIGHT}+${X}+${Y}" -r | copy_shot
   notify_view
 }
 
 shotarea() {
-  cd ${dir} && maim -u -f png -s -b 2 -c 0.35,0.55,0.85,0.25 -l | copy_shot
+  TMP_WINDOW_ID=$(xdotool selectwindow)
+      
+  unset WINDOW X Y WIDTH HEIGHT SCREEN
+  eval $(xdotool getwindowgeometry --shell "${TMP_WINDOW_ID}")
+  
+  # Put the window in focus
+  xdotool windowfocus --sync "${TMP_WINDOW_ID}"
+  sleep 0.05
+  
+  # run flameshot in gui mode in the desired coordinates
+  flameshot screen -p  "$dir/$file" --region "${WIDTH}x${HEIGHT}+${X}+${Y}" -r | copy_shot
   notify_view
 }
 
