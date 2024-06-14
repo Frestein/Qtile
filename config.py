@@ -29,7 +29,7 @@ terminal = "st"
 android_studio = "android-studio"
 telegram = "telegram-desktop"
 password_manager = "keepassxc"
-rofi_applets = home + "/.config/qtile/scripts/"
+dmenu_applets = home + "/.config/qtile/scripts/"
 notify_cmd = "dunstify -u low -h string:x-dunst-stack-tag:qtileconfig"
 
 font_name = "JetBrains Mono Nerd Font Mono"
@@ -85,8 +85,9 @@ keys = [
         ],
         name="Launch",
     ),
-    Key("M-k", lazy.spawn(terminal_session), desc="Terminal session"),
     Key("M-<Return>", lazy.spawn(terminal), desc="Terminal"),
+    Key("M-k", lazy.spawn(terminal_session), desc="Terminal session"),
+    # Scratchpads --
     Key("M-t", lazy.group["scratchpad"].dropdown_toggle("Terminal"), desc="Dropdown terminal"),
     Key("M-u", lazy.group["scratchpad"].dropdown_toggle("Upgrade system"), desc="Upgrade system"),
     Key("M-m", lazy.group["scratchpad"].dropdown_toggle("Music player"), desc="Music player"),
@@ -161,12 +162,18 @@ keys = [
                 dmenu_lines=10,
             )
         ),
-        desc="Runner applet",
+        desc="Application runner applet",
     ),
     Key(
         "A-s",
-        lazy.spawn(rofi_applets + "dmenu_screenshot"),
+        lazy.spawn(dmenu_applets + "dmenu_screenshot"),
         desc="Screenshot applet",
+    ),
+    Key(
+        "M-s",
+        lazy.spawn(websearch),
+        lazy.group["3"].toscreen(),
+        desc="Web search applet",
     ),
     Key(
         "A-n",
@@ -176,12 +183,6 @@ keys = [
             )
         ),
         desc="Network manager applet",
-    ),
-    Key(
-        "M-s",
-        lazy.spawn(websearch),
-        lazy.group["3"].toscreen(),
-        desc="Web search applet",
     ),
     Key(
         "A-d",
