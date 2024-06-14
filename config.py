@@ -91,8 +91,6 @@ keys = [
     Key("M-u", lazy.group["scratchpad"].dropdown_toggle("Upgrade system"), desc="Upgrade system"),
     Key("M-m", lazy.group["scratchpad"].dropdown_toggle("Music player"), desc="Music player"),
     Key("M-S-f", lazy.group["scratchpad"].dropdown_toggle("File manager"), desc="File manager"),
-    # Rofi Applets --
-    Key("A-r", lazy.spawn(rofi_applets + "rofi_asroot"), desc="Run asroot applet"),
     # Dmenu Applets --
     Key(
         "A-<F1>",
@@ -128,13 +126,30 @@ keys = [
         "A-w",
         lazy.run_extension(
             extension.WindowList(
-                dmenu_prompt="Windows",
-                item_format="{group}: {window}",
+                dmenu_prompt="Current open windows",
+                item_format="{group} {window}",
                 dmenu_command="dmenu -vi -noi",
                 dmenu_lines=10,
             )
         ),
-        desc="Window list applet",
+        desc="Current open window list applet",
+    ),
+    Key(
+        "A-r",
+        lazy.run_extension(
+            extension.CommandSet(
+                dmenu_prompt="Launch as root",
+                commands={
+                    " Terminal": dmenu_applets + "qtile_asroot " + terminal,
+                    " Neovim": dmenu_applets + "qtile_asroot \"" + terminal + " -e nvim\"",
+                    "󰇥 Yazi": dmenu_applets + "qtile_asroot \"" + terminal + " -e " + tui_file_manager + "\"",
+                    " Nemo": dmenu_applets + "qtile_asroot \"dbus-run-session " + file_manager +  "\"",
+                },
+                dmenu_command="dmenu -vi -noi",
+                dmenu_lines=10,
+            )
+        ),
+        desc="Asroot applet",
     ),
     Key(
         "M-r",
