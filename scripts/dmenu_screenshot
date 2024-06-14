@@ -8,7 +8,7 @@
     ${notify_cmd_shot} "Copied to clipboard."
     paplay /usr/share/sounds/freedesktop/stereo/screen-capture.oga &>/dev/null &
     nsxiv -b "${dir}/$file"
-    if [[ -e "$dir/$file" ]]; then
+    if [ -e "$dir/$file" ] && [ -s "$dir/$file" ]; then
       ${notify_cmd_shot} "Screenshot saved."
     else
       ${notify_cmd_shot} "Screenshot aborted."
@@ -16,7 +16,7 @@
   }
   # copy screenshot to clipboard
   copy_shot() {
-    xclip -selection clipboard -t image/png
+    tee "$dir/$file" | xclip -selection clipboard -t image/png
   }
   # countdown
   countdown() {
@@ -161,7 +161,7 @@ case $screenshot_type in "Instant")
 
   case $RET in
   Trim)
-    flameshot gui -p "$dir/$file" -r |
+    flameshot gui -r |
       magick png:- -trim png:- |
       copy_shot
     notify_view
@@ -179,17 +179,17 @@ case $screenshot_type in "Instant")
     sleep 0.05
 
     # run flameshot in gui mode in the desired coordinates
-    flameshot gui -p "$dir/$file" --region "${WIDTH}x${HEIGHT}+${X}+${Y}" -r | copy_shot
+    flameshot gui --region "${WIDTH}x${HEIGHT}+${X}+${Y}" -r | copy_shot
     notify_view
     ;;
   "Remove white")
-    flameshot gui -p "$dir/$file" -r |
+    flameshot gui -r |
       magick png:- -transparent white -fuzz 90% png:- |
       copy_shot
     notify_view
     ;;
   Bordered)
-    flameshot gui -p "$dir/$file" -r |
+    flameshot gui -r |
       magick png:- \
         -format "roundrectangle 4,3 %[fx:w+0],%[fx:h+0] ${config_action_bordered_corner_radius},${config_action_bordered_corner_radius}" \
         -write info:/tmp/tmp.mvg \
@@ -220,7 +220,7 @@ case $screenshot_type in "Instant")
     done
 
     if [[ -n "${tmp_size}" ]]; then
-      flameshot gui -p "$dir/$file" -r |
+      flameshot gui -r |
         magick png:- -resize "${tmp_size}" png:- |
         copy_shot
       notify_view
@@ -234,7 +234,7 @@ case $screenshot_type in "Instant")
   # Check if countdown_time is a number and greater than 0
   if [[ "$countdown_time" =~ ^[0-9]+$ ]] && [ "$countdown_time" -gt 0 ]; then
       countdown $countdown_time
-      flameshot gui -p "$dir/$file" -r | copy_shot
+      flameshot gui -r | copy_shot
       notify_view
   else
       dunstify -u low -h string:x-dunst-stack-tag:obscreenshot -i /usr/share/archcraft/icons/dunst/picture.png "Invalid countdown time. Skipping screenshot."

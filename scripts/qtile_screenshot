@@ -17,7 +17,7 @@ notify_view() {
   ${notify_cmd_shot} "Copied to clipboard."
   paplay /usr/share/sounds/freedesktop/stereo/screen-capture.oga &>/dev/null &
   nsxiv -b "${dir}/$file"
-  if [[ -e "$dir/$file" ]]; then
+  if [ -e "$dir/$file" ] && [ -s "$dir/$file" ]; then
     ${notify_cmd_shot} "Screenshot saved."
   else
     ${notify_cmd_shot} "Screenshot aborted."
@@ -26,7 +26,7 @@ notify_view() {
 
 # copy screenshot to clipboard
 copy_shot() {
-  xclip -selection clipboard -t image/png
+  tee "$dir/$file" | xclip -selection clipboard -t image/png
 }
 
 # countdown
@@ -37,26 +37,28 @@ countdown() {
   done
 }
 
-# take shots
-shotnow() {
-  flameshot screen -p "$dir/$file" -r | copy_shot
+# screenshot
+shot() {
+  local mode="$1"
+  local extra_args="${@:2}"
+  flameshot $mode $extra_args -r | copy_shot
   notify_view
+}
+
+shotnow() {
+  shot screen
 }
 
 shot5() {
   countdown 5
   sleep 1
-
-  flameshot screen -p "$dir/$file" -r | copy_shot
-  notify_view
+  shot screen
 }
 
 shot10() {
   countdown 10
   sleep 1
-
-  flameshot screen -p "$dir/$file" -r | copy_shot
-  notify_view
+  shot screen
 }
 
 shotwin() {
@@ -70,13 +72,11 @@ shotwin() {
   sleep 0.05
   
   # run flameshot in gui mode in the desired coordinates
-  flameshot gui -p "$dir/$file" --region "${WIDTH}x${HEIGHT}+${X}+${Y}" -r | copy_shot
-  notify_view
+  shot gui --region "${WIDTH}x${HEIGHT}+${X}+${Y}"
 }
 
 shotarea() {
-  flameshot gui -p "$dir/$file" -r | copy_shot
-  notify_view
+  shot gui
 }
 
 # execute
