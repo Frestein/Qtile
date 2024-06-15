@@ -12,7 +12,6 @@ from libqtile.layout import Bsp, Columns, Floating, Max, Stack, Tile
 from libqtile.lazy import lazy
 
 from utils.audio import get_active_audio_device
-from utils.network import get_active_interface
 
 # Variables {{{
 
@@ -622,7 +621,6 @@ net = widget.Net(
             )
         ),
     },
-    interface=get_active_interface(),
     format="{down:.0f} {down_suffix:<0}/{up:.0f} {up_suffix:<0}",
     update_interval=5,
     foreground=colors[8],
