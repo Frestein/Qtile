@@ -11,6 +11,9 @@ from libqtile.config import EzKeyChord as KeyChord
 from libqtile.layout import Bsp, Columns, Floating, Max, Stack, Tile
 from libqtile.lazy import lazy
 
+from utils.audio import get_active_audio_device
+from utils.network import get_active_interface
+
 # Variables {{{
 
 home = path.expanduser("~")
@@ -587,7 +590,7 @@ volume = widget.Volume(
         "Button1": lazy.spawn(volume + " --inc"),
         "Button3": lazy.spawn(volume + " --dec"),
     },
-    get_volume_command="pactl get-sink-volume alsa_output.pci-0000_00_1f.3.analog-stereo",
+    get_volume_command=f"pactl get-sink-volume {get_active_audio_device()}",
     foreground=colors[14],
 )
 check_updates_icon = widget.TextBox(
@@ -619,7 +622,7 @@ net = widget.Net(
             )
         ),
     },
-    interface="enp0s31f6",
+    interface=get_active_interface(),
     format="{down:.0f} {down_suffix:<0}/{up:.0f} {up_suffix:<0}",
     update_interval=5,
     foreground=colors[8],

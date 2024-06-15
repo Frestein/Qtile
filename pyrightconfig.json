@@ -1,0 +1,10 @@
+{
+  "include": ["utils"],
+
+  "exclude": ["**/__pycache__"],
+
+  "pythonVersion": "3.12",
+  "pythonPlatform": "Linux",
+  "reportMissingImports": true,
+  "typeCheckingMode": "off"
+}
