@@ -1,33 +1,45 @@
 #!/bin/sh
 
-# qtile dir
+# Qtile directory
 qdir="$HOME/.config/qtile"
 
-# Export desktop session
-export XDG_CURRENT_DESKTOP='qtile'
+# Launch polkit agent
+ if [[ ! $(pidof polkit-gnome-authentication-agent-1) ]]; then
+  /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
+ fi
 
-# Kill already running process
-_ps=(xsettingsd)
-for _prs in "${_ps[@]}"; do
-  if [[ $(pidof ${_prs}) ]]; then
-    killall -9 ${_prs}
-  fi
-done
+# Check the session type
+session_type=$(echo $XDG_SESSION_TYPE)
 
-# Lauch xsettingsd daemon
-xsettingsd --config="$qdir"/xsettingsd &
+if [ "$session_type" == "x11" ]; then
+  # Kill already running process
+  _ps=(xsettingsd)
+  for _prs in "${_ps[@]}"; do
+    if [[ $(pidof ${_prs}) ]]; then
+      killall -9 ${_prs}
+    fi
+  done
 
-# Fix cursor
-xsetroot -cursor_name left_ptr
+  # Lauch xsettingsd daemon
+  xsettingsd --config="$qdir"/xsettingsd &
+
+  # Fix cursor
+  xsetroot -cursor_name left_ptr &
+
+  # Lauch compositor
+  "$qdir/scripts/qtile_comp"
+fi
+
+if [ "$session_type" == "wayland" ]; then
+  # Fix resolution
+  wlr-randr --output=X11-1 --custom-mode 1920x1080 &
+fi
 
 # Lauch notification daemon
-"$qdir"/scripts/qtile_dunst
-
-# Lauch compositor
-"$qdir"/scripts/qtile_comp
+"$qdir/scripts/qtile_dunst"
 
 ## Mount Google Drive
-exec rclone mount --daemon GoogleDriveMain: ~/Google\ Drive &
+rclone mount --daemon GoogleDriveMain: "$HOME/Google Drive" &
 
 ## Launch jamesdsp
-exec jamesdsp -t &
+jamesdsp -t &

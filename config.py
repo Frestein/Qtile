@@ -2,7 +2,8 @@
 from os import environ, path
 from subprocess import Popen
 
-from libqtile import bar, extension, hook, qtile, widget
+from libqtile import bar, extension, hook, qtile
+from libqtile.backend.wayland import InputConfig
 from libqtile.config import DropDown, Group, Match, ScratchPad, Screen
 from libqtile.config import EzClick as Click
 from libqtile.config import EzDrag as Drag
@@ -10,12 +11,22 @@ from libqtile.config import EzKey as Key
 from libqtile.config import EzKeyChord as KeyChord
 from libqtile.layout import Bsp, Columns, Floating, Max, Stack, Tile
 from libqtile.lazy import lazy
+from qtile_extras import widget
+from qtile_extras.widget.decorations import RectDecoration
 
 from utils.audio import get_active_audio_device
 
 # Variables {{{
 
 home = path.expanduser("~")
+
+terminal = ""
+
+if qtile.core.name == "x11":
+    terminal = "st"
+elif qtile.core.name == "wayland":
+    terminal = "foot"
+
 autostart_sh = home + "/.config/qtile/scripts/qtile_autostart"
 color_picker = home + "/.config/qtile/scripts/qtile_colorpicker"
 network_manager = home + "/.config/qtile/scripts/networkmanager"
@@ -27,14 +38,17 @@ file_manager = "nemo"
 tui_file_manager = home + "/.cargo/bin/yazi"
 web_browser = "firefox"
 terminal_session = "kitty --session=session.conf"
-terminal = "st"
+tabbed_terminal = "tabbed -c -r 2 st -w ''"
+email_client = "thunderbird"
+calculator = "galculator"
 android_studio = "android-studio"
+upgrade_system = "paru -Syu"
 telegram = "telegram-desktop"
 password_manager = "keepassxc"
 dmenu_applets = home + "/.config/qtile/scripts/"
 notify_cmd = "dunstify -u low -h string:x-dunst-stack-tag:qtileconfig"
 
-font_name = "JetBrains Mono Nerd Font Mono"
+font_name = "JetBrainsMono Nerd Font Mono"
 border_width = 2
 margin = 5
 colors = [
@@ -54,12 +68,25 @@ colors = [
     "#EBCB8B",  # 13
     "#A3BE8C",  # 14
     "#B48EAD",  # 15
+    # Extra
+    "#333945",  # 16
 ]
 
 # }}}
 # Environments {{{
 
 environ["KITTY_CONFIG_DIRECTORY"] = home + "/.config/qtile/kitty"
+
+# }}}
+# Wayland Input Rules {{{
+
+wl_input_rules = {
+    "type:keyboard": InputConfig(
+        kb_layout="us,ru",
+        kb_options="grp:win_space_toggle",
+    ),
+}
+
 
 # }}}
 # Autostart {{{
@@ -75,25 +102,49 @@ def autostart():
 
 keys = [
     # Apps --
-    KeyChord(
-        "M-l",
-        [
-            Key("w", lazy.spawn(web_browser), desc="Web browser"),
-            Key("a", lazy.spawn(android_studio), desc="Android Studio"),
-            Key("j", lazy.spawn("jetbrains-toolbox"), desc="JetBrains Toolbox"),
-            Key("t", lazy.spawn(telegram), desc="Telegram"),
-            Key("f", lazy.spawn(file_manager), desc="File manager"),
-            Key("k", lazy.spawn(password_manager), desc="Password manager"),
-        ],
-        name="Launch",
-    ),
     Key("M-<Return>", lazy.spawn(terminal), desc="Terminal"),
+    Key("M-b", lazy.spawn(tabbed_terminal), desc="Tabbed terminal"),
     Key("M-k", lazy.spawn(terminal_session), desc="Terminal session"),
+    Key("<XF86HomePage>", lazy.spawn(web_browser), desc="Web browser"),
+    Key("<XF86Explorer>", lazy.spawn(file_manager), desc="File manager (GUI)"),
+    Key("M-a", lazy.spawn(android_studio), desc="Android Studio"),
     # Scratchpads --
-    Key("M-t", lazy.group["scratchpad"].dropdown_toggle("Terminal"), desc="Dropdown terminal"),
-    Key("M-u", lazy.group["scratchpad"].dropdown_toggle("Upgrade system"), desc="Upgrade system"),
-    Key("M-m", lazy.group["scratchpad"].dropdown_toggle("Music player"), desc="Music player"),
-    Key("M-S-f", lazy.group["scratchpad"].dropdown_toggle("File manager"), desc="File manager"),
+    Key(
+        "M-t",
+        lazy.group["scratchpad"].dropdown_toggle("Terminal"),
+        desc="Dropdown terminal",
+    ),
+    Key("M-m", lazy.group["scratchpad"].dropdown_toggle("Telegram"), desc="Telegram"),
+    Key(
+        "M-u",
+        lazy.group["scratchpad"].dropdown_toggle("Upgrade system"),
+        desc="Upgrade system",
+    ),
+    Key(
+        "<XF86Tools>",
+        lazy.group["scratchpad"].dropdown_toggle("Music player"),
+        desc="Music player",
+    ),
+    Key(
+        "<XF86Mail>",
+        lazy.group["scratchpad"].dropdown_toggle("Email client"),
+        desc="Email client",
+    ),
+    Key(
+        "M-S-f",
+        lazy.group["scratchpad"].dropdown_toggle("File manager"),
+        desc="File manager (TUI)",
+    ),
+    Key(
+        "M-p",
+        lazy.group["scratchpad"].dropdown_toggle("Password manager"),
+        desc="Password manager",
+    ),
+    Key(
+        "<XF86Calculator>",
+        lazy.group["scratchpad"].dropdown_toggle("Calculator"),
+        desc="Calculator",
+    ),
     # Dmenu Applets --
     Key(
         "A-<F1>",
@@ -111,13 +162,13 @@ keys = [
         "A-q",
         lazy.run_extension(
             extension.CommandSet(
-                dmenu_prompt="Session",
+                dmenu_prompt="Session Manager",
                 commands={
-                    "Lock": 'betterlockscreen --lock --time-format %H:%M',
-                    "Logout": "qtile cmd-obj -o cmd -f shutdown",
-                    "Reload": "qtile cmd-obj -o cmd -f restart",
-                    "Reboot": "systemctl reboot",
-                    "Shutdown": "systemctl poweroff",
+                    " Lock": "betterlockscreen --lock --time-format %H:%M",
+                    "󰍃 Logout": "qtile cmd-obj -o cmd -f shutdown",
+                    " Reload": "qtile cmd-obj -o cmd -f restart",
+                    " Reboot": "systemctl reboot",
+                    " Shutdown": "systemctl poweroff",
                 },
                 dmenu_command="dmenu -vi -noi",
                 dmenu_lines=10,
@@ -144,9 +195,20 @@ keys = [
                 dmenu_prompt="Launch as root",
                 commands={
                     " Terminal": dmenu_applets + "qtile_asroot " + terminal,
-                    " Neovim": dmenu_applets + "qtile_asroot \"" + terminal + " -e nvim\"",
-                    "󰇥 Yazi": dmenu_applets + "qtile_asroot \"" + terminal + " -e " + tui_file_manager + "\"",
-                    " Nemo": dmenu_applets + "qtile_asroot \"dbus-run-session " + file_manager +  "\"",
+                    " Neovim": dmenu_applets
+                    + 'qtile_asroot "'
+                    + terminal
+                    + ' -e nvim"',
+                    "󰇥 Yazi": dmenu_applets
+                    + 'qtile_asroot "'
+                    + terminal
+                    + " -e "
+                    + tui_file_manager
+                    + '"',
+                    " Nemo": dmenu_applets
+                    + 'qtile_asroot "dbus-run-session '
+                    + file_manager
+                    + '"',
                 },
                 dmenu_command="dmenu -vi -noi",
                 dmenu_lines=10,
@@ -173,7 +235,7 @@ keys = [
     ),
     Key(
         "M-s",
-        lazy.spawn(websearch),
+        lazy.spawn(dmenu_applets + "dmenu_websearch"),
         lazy.group["3"].toscreen(),
         desc="Web search applet",
     ),
@@ -188,34 +250,78 @@ keys = [
     ),
     Key(
         "A-d",
-        lazy.spawn(download),
+        lazy.spawn(dmenu_applets + "dmenu_downloader"),
         desc="Downloader applet",
     ),
     # Function keys : Volume --
-    Key("<XF86AudioRaiseVolume>", lazy.spawn(volume + " --inc"), desc="Raise speaker volume"),
-    Key("<XF86AudioLowerVolume>", lazy.spawn(volume + " --dec"), desc="Lower speaker volume"),
+    Key(
+        "<XF86AudioRaiseVolume>",
+        lazy.spawn(volume + " --inc"),
+        desc="Raise speaker volume",
+    ),
+    Key(
+        "<XF86AudioLowerVolume>",
+        lazy.spawn(volume + " --dec"),
+        desc="Lower speaker volume",
+    ),
     Key("<XF86AudioMute>", lazy.spawn(volume + " --toggle"), desc="Toggle mute"),
-    Key("<XF86AudioMicMute>", lazy.spawn(volume + " --toggle-mic"), desc="Toggle mute for mic"),
     # Function keys : Media --
     Key("<XF86AudioNext>", lazy.spawn("playerctl next"), desc="Next track"),
     Key("<XF86AudioPrev>", lazy.spawn("playerctl previous"), desc="Previous track"),
-    Key("<XF86AudioPlay>", lazy.spawn("playerctl play-pause"), desc="Toggle play/pause"),
+    Key(
+        "<XF86AudioPlay>", lazy.spawn("playerctl play-pause"), desc="Toggle play/pause"
+    ),
     Key("<XF86AudioStop>", lazy.spawn("playerctl stop"), desc="Stop playing"),
     # Screenshots --
     Key("<Print>", lazy.spawn(screenshot + " --now"), desc="Take Screenshot"),
-    Key("C-<Print>", lazy.spawn(screenshot + " --in5"), desc="Take Screenshot in 5 seconds"),
-    Key("S-<Print>", lazy.spawn(screenshot + " --in10"), desc="Take Screenshot in 10 seconds"),
-    Key("C-S-<Print>", lazy.spawn(screenshot + " --win"), desc="Take Screenshot of active window"),
-    Key("M-<Print>", lazy.spawn(screenshot + " --area"), desc="Take Screenshot of selected area"),
+    Key(
+        "C-<Print>",
+        lazy.spawn(screenshot + " --in5"),
+        desc="Take Screenshot in 5 seconds",
+    ),
+    Key(
+        "S-<Print>",
+        lazy.spawn(screenshot + " --in10"),
+        desc="Take Screenshot in 10 seconds",
+    ),
+    Key(
+        "C-S-<Print>",
+        lazy.spawn(screenshot + " --win"),
+        desc="Take Screenshot of active window",
+    ),
+    Key(
+        "M-<Print>",
+        lazy.spawn(screenshot + " --area"),
+        desc="Take Screenshot of selected area",
+    ),
     # Misc --
-    Key("M-p", lazy.spawn(color_picker), desc="Run colorpicker"),
-    Key("A-C-l", lazy.spawn("betterlockscreen --lock --time-format %H:%M"), desc="Run lockscreen"),
+    Key("A-p", lazy.spawn(color_picker), desc="Run colorpicker"),
+    Key(
+        "A-C-l",
+        lazy.spawn("betterlockscreen --lock --time-format %H:%M"),
+        desc="Run lockscreen",
+    ),
     # WM Specific --
     Key("M-c", lazy.window.kill(), desc="Kill focused window"),
     # Control Qtile
-    Key("M-C-r", lazy.reload_config(), lazy.spawn(notify_cmd + ' "Configuration Reloaded!"'), desc="Reload the config"),
-    Key("M-C-s", lazy.restart(), lazy.spawn(notify_cmd + ' "Restarting Qtile..."'), desc="Restart Qtile"),
-    Key("M-C-q", lazy.shutdown(), lazy.spawn(notify_cmd + ' "Exiting Qtile..."'), desc="Shutdown Qtile"),
+    Key(
+        "M-C-r",
+        lazy.reload_config(),
+        lazy.spawn(notify_cmd + ' "Configuration Reloaded!"'),
+        desc="Reload the config",
+    ),
+    Key(
+        "M-C-s",
+        lazy.restart(),
+        lazy.spawn(notify_cmd + ' "Restarting Qtile..."'),
+        desc="Restart Qtile",
+    ),
+    Key(
+        "M-C-q",
+        lazy.shutdown(),
+        lazy.spawn(notify_cmd + ' "Exiting Qtile..."'),
+        desc="Shutdown Qtile",
+    ),
     # Switch between windows
     Key("M-<Left>", lazy.layout.left(), desc="Move focus to left"),
     Key("M-<Right>", lazy.layout.right(), desc="Move focus to right"),
@@ -235,11 +341,27 @@ keys = [
     Key("M-C-<Up>", lazy.layout.grow_up(), desc="Grow window up"),
     Key("M-C-<Return>", lazy.layout.normalize(), desc="Reset all window sizes"),
     # Toggle floating and fullscreen
-    Key("M-z", lazy.window.toggle_floating(), desc="Put the focused window to/from floating mode"),
-    Key("M-f", lazy.window.toggle_fullscreen(), desc="Put the focused window to/from fullscreen mode"),
+    Key(
+        "M-z",
+        lazy.window.toggle_floating(),
+        desc="Put the focused window to/from floating mode",
+    ),
+    Key(
+        "M-f",
+        lazy.window.toggle_fullscreen(),
+        desc="Put the focused window to/from fullscreen mode",
+    ),
     # Go to next/prev group
-    Key("C-A-<bracketright>", lazy.screen.next_group(skip_empty=1), desc="Move to the group on the right"),
-    Key("C-A-<bracketleft>", lazy.screen.prev_group(skip_empty=1), desc="Move to the group on the left"),
+    Key(
+        "C-A-<bracketright>",
+        lazy.screen.next_group(skip_empty=1),
+        desc="Move to the group on the right",
+    ),
+    Key(
+        "C-A-<bracketleft>",
+        lazy.screen.prev_group(skip_empty=1),
+        desc="Move to the group on the left",
+    ),
     # Back-n-forth groups
     Key("A-<Tab>", lazy.screen.toggle_group(), desc="Move to the last visited group"),
     # Change focus to other window
@@ -247,11 +369,23 @@ keys = [
     # Toggle between different layouts as defined below
     Key("M-S-<space>", lazy.next_layout(), desc="Toggle between layouts"),
     # Increase the space for master window at the expense of slave windows
-    Key("M-<equal>", lazy.layout.increase_ratio(), desc="Increase the space for master window"),
+    Key(
+        "M-<equal>",
+        lazy.layout.increase_ratio(),
+        desc="Increase the space for master window",
+    ),
     # Decrease the space for master window in the advantage of slave windows
-    Key("M-<minus>", lazy.layout.decrease_ratio(), desc="Decrease the space for master window"),
+    Key(
+        "M-<minus>",
+        lazy.layout.decrease_ratio(),
+        desc="Decrease the space for master window",
+    ),
     # Toggle between split and unsplit sides of stack.
-    Key("M-S-s", lazy.layout.toggle_split(), desc="Toggle between split and unsplit sides of stack"),
+    Key(
+        "M-S-s",
+        lazy.layout.toggle_split(),
+        desc="Toggle between split and unsplit sides of stack",
+    ),
     # Modes: Reize
     KeyChord(
         "M-S-r",
@@ -267,10 +401,7 @@ keys = [
     # Modes: Layouts
     KeyChord(
         "M-S-l",
-        [
-            Key("<Left>", lazy.prev_layout()),
-            Key("<Right>", lazy.next_layout())
-        ],
+        [Key("<Left>", lazy.prev_layout()), Key("<Right>", lazy.next_layout())],
         mode=True,
         name="Layouts",
     ),
@@ -305,26 +436,26 @@ groups = [
             DropDown(
                 "Terminal",
                 terminal,
-                x=0.25,
-                y=0.25,
+                x=0.5 / 2,
+                y=0.5 / 2,
                 width=0.5,
                 height=0.5,
                 opacity=1.0,
             ),
             DropDown(
                 "Upgrade system",
-                terminal + " -e paru -Syu",
-                x=0.25,
-                y=0.25,
+                terminal + " -e " + upgrade_system,
+                x=0.5 / 2,
+                y=0.5 / 2,
                 width=0.5,
                 height=0.5,
                 opacity=1.0,
             ),
             DropDown(
                 "Music player",
-                terminal + " -e cmus",
-                x=0.25,
-                y=0.25,
+                terminal + " -n st-cmus -e cmus",
+                x=0.5 / 2,
+                y=0.5 / 2,
                 width=0.5,
                 height=0.5,
                 opacity=1.0,
@@ -332,10 +463,48 @@ groups = [
             DropDown(
                 "File manager",
                 terminal + " -e " + tui_file_manager,
-                x=0.25,
-                y=0.25,
+                x=0.5 / 2,
+                y=0.5 / 2,
                 width=0.5,
                 height=0.5,
+                opacity=1.0,
+            ),
+            DropDown(
+                "Calculator",
+                calculator,
+                x=0.75 / 2,
+                y=0.75 / 2,
+                width=0.25,
+                height=0.25,
+                opacity=1.0,
+                on_focus_lost_hide=False,
+            ),
+            DropDown(
+                "Email client",
+                email_client,
+                x=0.25 / 2,
+                y=0.25 / 2,
+                width=0.75,
+                height=0.75,
+                opacity=1.0,
+            ),
+            DropDown(
+                "Telegram",
+                telegram,
+                x=0.25 / 2,
+                y=0.25 / 2,
+                width=0.75,
+                height=0.75,
+                opacity=1.0,
+                on_focus_lost_hide=False,
+            ),
+            DropDown(
+                "Password manager",
+                password_manager,
+                x=0.25 / 2,
+                y=0.25 / 2,
+                width=0.75,
+                height=0.75,
                 opacity=1.0,
             ),
         ],
@@ -383,7 +552,6 @@ groups = [
     Group(
         name="6",
         matches=[
-            Match(wm_class="TelegramDesktop"),
             Match(wm_class="webcord"),
         ],
         label="",
@@ -399,7 +567,6 @@ groups = [
         name="8",
         matches=[
             Match(wm_class="jamesdsp"),
-            Match(wm_class="KeePassXC"),
         ],
         label="",
     ),
@@ -469,9 +636,6 @@ layouts = [
     ),
     # Maximized layout
     Max(
-        border_focus=colors[9],
-        border_normal=colors[0],
-        border_width=border_width,
         margin=margin,
     ),
     # A layout composed of stacks of windows
@@ -521,7 +685,7 @@ class CustomClock(widget.Clock):
     def __init__(self, **config):
         widget.Clock.__init__(self, **config)
         self.add_callbacks({"Button1": self.toggle_format})
-        self.format_options = ["%I:%M", "%Y/%m/%d"]
+        self.format_options = ["%I:%M", "%m/%d/%Y"]
         self.current_format_index = 0
         self.update_interval = 0.1
 
@@ -531,6 +695,11 @@ class CustomClock(widget.Clock):
         )
         self.format = self.format_options[self.current_format_index]
 
+
+decor = {
+    "decorations": [RectDecoration(colour=colors[16], radius=0, filled=True)],
+    "padding": 20,
+}
 
 widget_defaults = dict(
     font=font_name,
@@ -542,7 +711,9 @@ widget_defaults = dict(
 
 current_layout_icon = widget.CurrentLayoutIcon(
     scale=0.5,
-    background=colors[9],
+    use_mask=True,
+    foreground=colors[9],
+    background=colors[1],
 )
 group_box = widget.GroupBox(
     fontsize=20,
@@ -560,58 +731,47 @@ group_box = widget.GroupBox(
     urgent_text=colors[5],
     use_mouse_wheel=True,
 )
-cmus_icon = widget.TextBox(
-    text="",
-    fontsize=20,
-    background=colors[13],
-)
-cmus = widget.Cmus(
-    format="{artist} — {title}",
-    noplay_color=colors[13],
-    play_color=colors[13],
-    foreground=colors[13],
-)
 windowname_icon = widget.TextBox(
     text="",
     fontsize=20,
     background=colors[9],
 )
 windowname = widget.WindowName(
+    scroll=True,
+    width=300,
     foreground=colors[9],
+)
+cmus_icon = widget.TextBox(
+    text="",
+    fontsize=20,
+    background=colors[13],
+)
+cmus = widget.Cmus(
+    **decor,
+    format="{play_icon}{artist} — {title}",
+    scroll=True,
+    width=350,
+    noplay_color=colors[13],
+    play_color=colors[13],
+    foreground=colors[13],
 )
 volume_icon = widget.TextBox(
     text="󰕾",
     fontsize=20,
-    background=colors[14],
+    background=colors[9],
 )
 volume = widget.Volume(
-    mouse_callbacks={
-        "Button1": lazy.spawn(volume + " --inc"),
-        "Button3": lazy.spawn(volume + " --dec"),
-    },
     get_volume_command=f"pactl get-sink-volume {get_active_audio_device()}",
-    foreground=colors[14],
-)
-check_updates_icon = widget.TextBox(
-    text="󰚰",
-    fontsize=20,
-    background=colors[7],
-)
-check_updates = widget.CheckUpdates(
-    distro="Arch_paru",
-    display_format="{updates}",
-    no_update_string="0",
-    mouse_callbacks={
-        "Button1": lazy.group["scratchpad"].dropdown_toggle("Upgrade"),
-        "Button3": "paru -Qu",
-    },
-    colour_have_updates=colors[7],
-    colour_no_updates=colors[7],
+    mute_command=volume + " --toggle",
+    volume_app="pavucontrol",
+    volume_down_command=volume + " --dec",
+    volume_up_command=volume + " --inc",
+    foreground=colors[9],
 )
 net_icon = widget.TextBox(
     text="",
     fontsize=22,
-    background=colors[8],
+    background=colors[10],
 )
 net = widget.Net(
     mouse_callbacks={
@@ -623,45 +783,52 @@ net = widget.Net(
     },
     format="{down:.0f} {down_suffix:<0}/{up:.0f} {up_suffix:<0}",
     update_interval=5,
-    foreground=colors[8],
+    foreground=colors[10],
 )
 memory_icon = widget.TextBox(
     text="",
     fontsize=20,
-    background=colors[9],
+    background=colors[12],
 )
 memory = widget.Memory(
     format="{MemUsed:.0f}{mm}/{MemTotal:.0f}{mm}",
     measure_mem="G",
-    foreground=colors[9],
+    foreground=colors[12],
 )
 cpu_icon = widget.TextBox(
     text="󰍛",
     fontsize=20,
-    background=colors[10],
+    background=colors[13],
 )
 cpu = widget.CPU(
     format="{load_percent:.0f}%",
     update_interval=5,
-    foreground=colors[10],
+    foreground=colors[13],
 )
 tray_icon = widget.TextBox(
     text="",
     fontsize=20,
-    background=colors[15],
+    background=colors[8],
 )
-tray = widget.Systray(
-    padding=5,
-    icon_size=18,
-)
+tray = ""
+if qtile.core.name == "x11":
+    tray = widget.Systray(
+        padding=5,
+        icon_size=18,
+    )
+elif qtile.core.name == "wayland":
+    tray = widget.StatusNotifier(
+        padding=5,
+        icon_size=18,
+    )
 clock_icon = widget.TextBox(
     text="",
     fontsize=20,
-    background=colors[11],
+    background=colors[14],
 )
 clock = CustomClock(
     format="%I:%M",
-    foreground=colors[11],
+    foreground=colors[14],
 )
 
 # }}}
@@ -683,27 +850,23 @@ screens = [
     Screen(
         top=bar.Bar(
             [
-                # NB Systray is incompatible with Wayland, consider using StatusNotifier instead
-                # widget.StatusNotifier(),
                 current_layout_icon,
                 group_box,
                 windowname_icon,
                 windowname,
-                cmus_icon,
+                widget.Spacer(length=bar.STRETCH),
                 cmus,
+                widget.Spacer(length=bar.STRETCH),
+                tray,
+                widget.Spacer(length=5),
                 volume_icon,
                 volume,
-                check_updates_icon,
-                check_updates,
                 net_icon,
                 net,
                 memory_icon,
                 memory,
                 cpu_icon,
                 cpu,
-                tray_icon,
-                tray,
-                widget.Spacer(length=5),
                 clock_icon,
                 clock,
             ],
@@ -753,6 +916,7 @@ floating_layout = Floating(
         # Run the utility of `xprop` to see the wm class and name of an X client.
         *Floating.default_float_rules,
         Match(wm_class="firefox", title="Library"),
+        Match(wm_class="galculator"),
     ],
 )
 
